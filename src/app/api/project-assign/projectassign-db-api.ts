@@ -67,6 +67,7 @@ export const updateProjectAssign = async (
   curPrjTaskRowOj
 ) => {
   let rows;
+  console.log("curPrjTaskRowOj", curPrjTaskRowOj);
   const transaction = db.transaction(() => {
     try {
       const query1 = `SELECT * FROM projectassigns

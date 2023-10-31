@@ -1,4 +1,4 @@
-import {  db} from "@/db";
+import { db } from "@/db";
 
 export const getAllProjectCount = async () => {
   let rows;
@@ -119,7 +119,7 @@ export const newProject = async (
           projectstatus
         );
       // console.log("staff", project.lastInsertRowid);
-
+      rows = project.lastInsertRowid;
       for (let i = 0; i < taskRowObjects.length; i++) {
         const element = taskRowObjects[i];
         const query2 = `INSERT INTO projecttasks (projectid,

@@ -12,6 +12,7 @@ import { validateEmail } from "../common-comp/nextui-input-fields/next-email-inp
 import { compare } from "bcryptjs";
 import { db } from "@/db";
 import OrganizationSelect from "../organization/org-select";
+let CryptoJS = require("crypto-js");
 
 const Login = () => {
   let pathname: string = "";
@@ -32,8 +33,10 @@ const Login = () => {
       "url('https://img.freepik.com/free-vector/flat-design-business-planning-concept_23-2149151729.jpg?w=1060&t=st=1698555917~exp=1698556517~hmac=fd5322c5d836a097671d554fd1ee76d6ba3f003dd7f16bb939a7ebc84eb913d8')",
   };
 
-  const [email, setEmail] = useState("systemadmin@gmail.com");
-  const [password, setPassword] = useState("systemadmin");
+  // const [email, setEmail] = useState("systemadmin@gmail.com");
+  // const [password, setPassword] = useState("systemadmin");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
 
   const [isVisible, setIsVisible] = React.useState(false);
@@ -50,8 +53,12 @@ const Login = () => {
   useEffect(() => {
     try {
       const tmpEmail = localStorage.getItem("protrackemail");
+      const tmpPassword = localStorage.getItem("protrackpassword");
       if (tmpEmail) {
         setEmail(tmpEmail);
+        let tmpdecPassword = CryptoJS.AES.decrypt(tmpPassword, "protrack123");
+        let decPassword = tmpdecPassword.toString(CryptoJS.enc.Utf8);
+        setPassword(decPassword);
       }
     } catch (error) {
       console.log("error", error);
@@ -149,8 +156,14 @@ const Login = () => {
               });
               if (rememberMe) {
                 localStorage.setItem("protrackemail", email);
+                let encpassword = CryptoJS.AES.encrypt(
+                  password,
+                  "protrack123"
+                ).toString();
+                localStorage.setItem("protrackpassword", encpassword);
               } else {
                 localStorage.removeItem("protrackemail");
+                localStorage.removeItem("protrackpassword");
               }
               router.push("/dashboard");
             } else {

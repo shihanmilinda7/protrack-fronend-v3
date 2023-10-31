@@ -24,7 +24,7 @@ type TaskDashBoardObj = {
 export default function Dashboard() {
   const router = useRouter();
   const { data: session, status } = useSession();
-  console.log("session", session);
+  // console.log("session", session);
   const tmpUser = session?.user;
   const userRole = session?.user?.role;
   const userid = session?.user?.userid;

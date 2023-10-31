@@ -221,7 +221,7 @@ export default function NewProject() {
           );
           const jsonResponse = await response.json();
 
-          if (jsonResponse == "SUCCESS") {
+          if (jsonResponse.message == "SUCCESS") {
             toast.success("Project created successfully!", {
               position: "top-right",
               autoClose: 1000,
@@ -232,7 +232,8 @@ export default function NewProject() {
               progress: undefined,
               theme: "colored",
             });
-            router.push("/project");
+            // router.push("/project");
+            router.push("/project/new-project?projectid=" + jsonResponse.newProjectId);
           }
         } else {
           toast.info("Project should be contain at least one task!", {
@@ -303,7 +304,9 @@ export default function NewProject() {
               progress: undefined,
               theme: "colored",
             });
-            router.push("/project");
+            // router.push("/project");
+            toggleAssignSave();
+            // router.push("/project/new-project?projectid=" + projectid);
           }
         } else {
           toast.info("Project should be contain at least one task!", {

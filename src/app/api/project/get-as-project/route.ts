@@ -53,10 +53,10 @@ export async function POST(request: Request) {
     projectstatus,
     taskRowObjects,
   } = await request.json();
-  let message: string = "SUCCESS";
+  let res;
 
   try {
-    await newProject(
+    const newProjectId = await newProject(
       projectname,
       projectdescription,
       startdate,
@@ -64,11 +64,12 @@ export async function POST(request: Request) {
       projectstatus,
       taskRowObjects
     );
+    res = { message: "SUCCESS", newProjectId };
   } catch (error) {
     console.error("Error adding new project", error);
-    message = "FAIL";
+    res = { message: "FAIL" };
   }
-  return NextResponse.json(message);
+  return NextResponse.json(res);
 }
 
 export async function PUT(request: Request) {

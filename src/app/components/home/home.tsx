@@ -5,8 +5,13 @@ import HomeNavbar from "../navbar/home-navbar";
 import { FaHourglassStart } from "react-icons/fa";
 import NewOrganization from "../organization/addnew";
 import ContactForm from "./contact-form";
+import { CiLogin } from "react-icons/ci";
+import { useRouter } from "next/navigation";
+import { ListboxWrapper } from "../common-comp/nextui-input-fields/ListboxWrapper";
 
 const HomePage = () => {
+  const router = useRouter();
+
   //get pathname
   let pathname: string = "";
 
@@ -22,6 +27,10 @@ const HomePage = () => {
     }
     // console.log("pathname", pathname);
   }
+
+  const login = async () => {
+    router.push("/login");
+  };
 
   return (
     <div className="relative min-h-screen flex flex-col p-2">
@@ -44,9 +53,18 @@ const HomePage = () => {
             facilitate efficient project monitoring."
           </div>
           <div className="flex flex-col items-center gap-4">
-            <NewOrganization />
+            <button
+              onClick={login}
+              className="flex bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+            >
+              Login <CiLogin className="h-6 w-6" />
+            </button>
+            {/* <div className="mt-12">
+              <ListboxWrapper>
+                <NewOrganization />
+              </ListboxWrapper>
+            </div> */}
           </div>
-          <div>{/* <ContactForm /> */}</div>
         </div>
         <div className="bg-indigo-600 hidden lg:block w-full md:w-1/2 xl:w-1/2 h-screen">
           <img

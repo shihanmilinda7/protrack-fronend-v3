@@ -10,6 +10,7 @@ import { DashboardUserLoginTable } from "../components/dashboard-userlogindetail
 import { webSocket } from "@/web-socket";
 import io from "socket.io-client";
 import UpdateEmptyLogoutSessions from "../components/dashboard-userlogindetails/update-empty-logout-sessions";
+import { updateDBConnection } from "@/db";
 
 type TaskDashBoardObj = {
   taskid?: number;
@@ -27,7 +28,7 @@ export default function Dashboard() {
   const tmpUser = session?.user;
   const userRole = session?.user?.role;
   const userid = session?.user?.userid;
-// console.log("session?.user?.orglist",session?.user?.orglist,)
+  // console.log("session?.user?.orglist",session?.user?.orglist,)
   const [logginCount, setLogginCount] = useState(1);
 
   const [staffid, setStaffid] = useState<any>(tmpUser?.staffid);
@@ -42,6 +43,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (userid) {
+      // updateDBConnection("template");
       getIfAnyUnlogoutSession();
     }
   }, [userid, saveToggle]);

@@ -19,6 +19,7 @@ import { useSelector } from "react-redux";
 import UpdatePassword from "../common-comp/update-password";
 import { webSocket } from "@/web-socket";
 import { Button } from "@nextui-org/react";
+import NewOrganization from "../organization/addnew";
 
 // const webSocket = io("http://localhost:5000");
 // const webSocket = io(process.env.DEVELOPMENT_SOCKET_URL);
@@ -154,13 +155,15 @@ const HomeNavbar = () => {
               md:pt-0"
           >
             <li className="py-3">
-              <Button
+              <NewOrganization />
+
+              {/* <Button
                 color="primary"
                 onClick={() => navButtonHandler("login")}
                 endContent={<CiLogin className="h-6 w-6" />}
               >
                 Sign in
-              </Button>
+              </Button> */}
             </li>
           </ul>
         </div>

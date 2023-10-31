@@ -30,13 +30,13 @@ const NewOrganization = () => {
 
   const [isCountryListOpen, setIsCountryListOpen] = useState(false);
 
-  const [name, setName] = useState("a");
-  const [organizationname, setOrganizationname] = useState("a");
+  const [name, setName] = useState("");
+  const [organizationname, setOrganizationname] = useState("");
   const [country, setCountry] = useState<any["value"]>("LK");
-  const [address, setAddress] = useState("a");
-  const [companyemail, setCompanyemail] = useState("gggg@gmail.com");
-  const [adminemail, setAdminemail] = useState("xxxxx@gmail.com");
-  const [contactno, setContactno] = useState("a");
+  const [address, setAddress] = useState("");
+  const [companyemail, setCompanyemail] = useState("");
+  const [adminemail, setAdminemail] = useState("");
+  const [contactno, setContactno] = useState("");
   // const [adminusername, setAdminusername] = useState("a");
 
   const [isValidEmail, setIsValidEmail] = useState(true);
@@ -187,12 +187,15 @@ const NewOrganization = () => {
 
   return (
     <div>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-      >
-        Get started with <br /> creating organization
-      </button>
+      <div className="flex text-blue-700 font-semibold">
+        {/* <span className="text-xl">Get started!</span> */}
+        <button
+          onClick={() => setIsOpen(true)}
+          className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+        >
+          Create organization...
+        </button>
+      </div>
       {/* <Button
         color="primary"
         endContent={<FaHourglassStart className="h-4 w-4" />}

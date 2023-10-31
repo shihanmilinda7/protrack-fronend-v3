@@ -256,7 +256,7 @@ const Navbar = () => {
             CeyInfo - ProTrack
           </h1> */}
         </div>
-        <div className={isMultyOrg1 == "SINGLE" ? "hidden" : ""}>
+        {/* <div className={isMultyOrg1 == "SINGLE" ? "hidden" : ""}>
           <Button color="default" onClick={changeOrgEvent}>
             Change Organization
           </Button>
@@ -267,7 +267,7 @@ const Navbar = () => {
             password="empty"
             runLogout={true}
           />
-        </div>
+        </div> */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           id="menu-button"
@@ -644,6 +644,20 @@ const Navbar = () => {
                 </li> */}
               </ul>
             </div>
+            <li className={"flex inline-block items-center justify-center"}>
+              <div className={isMultyOrg1 == "SINGLE" ? "hidden" : "flex inline-block items-center justify-center"}>
+                <Button color="primary" onClick={changeOrgEvent}>
+                  Organization
+                </Button>
+                <OrganizationSelect
+                  isOpenPopup={isMultyOrg}
+                  orgList={orgList}
+                  email={email}
+                  password="empty"
+                  runLogout={true}
+                />
+              </div>
+            </li>
             {/* <div className="dropdown inline-block relative rounded-lg z-48">
               <button className="md:pt-4 md:pb-4 md:pl-2 block text-indigo-800 hover:font-bold inline-flex">
                 <span className="mr-1">{userName}</span>

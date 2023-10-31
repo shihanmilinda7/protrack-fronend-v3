@@ -182,7 +182,12 @@ const OrganizationSelect = ({
                 </div>
               </div>
             </div>
-            <div className="flex items-center justify-end mt-3">
+            <div className="flex items-center justify-end mt-3 gap-2">
+              <div className={runLogout ? "" : "hidden"}>
+                <Button color="danger" onClick={() => setIsOpen(false)}>
+                  Cancel
+                </Button>
+              </div>
               <div>
                 <Button color="primary" onClick={buttonHanlder}>
                   Sumbit

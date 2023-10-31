@@ -32,8 +32,8 @@ const Login = () => {
       "url('https://img.freepik.com/free-vector/flat-design-business-planning-concept_23-2149151729.jpg?w=1060&t=st=1698555917~exp=1698556517~hmac=fd5322c5d836a097671d554fd1ee76d6ba3f003dd7f16bb939a7ebc84eb913d8')",
   };
 
-  const [email, setEmail] = useState("sdsadmin@gmail.com");
-  const [password, setPassword] = useState("sdsadmin1");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isVisible, setIsVisible] = React.useState(false);
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [dbname, setDbname] = useState("");

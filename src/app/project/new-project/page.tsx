@@ -28,6 +28,7 @@ import IconConfirmAlertbox from "@/app/components/common-comp/icon-confirm-alert
 
 import timezones from "timezones-list";
 import { useSelector } from "react-redux";
+import NextNumberInputField from "@/app/components/common-comp/nextui-input-fields/next-number-input-fields";
 
 export default function NewProject() {
   //get pathname
@@ -65,11 +66,13 @@ export default function NewProject() {
   const [projectdescription, setProjectdescription] = useState("");
   const [startdate, setStartdate] = useState("");
   const [enddate, setEnddate] = useState("");
+  const [datecount, setDatecount] = useState<any>(0);
   const [projectstatus, setProjectstatus] = useState(new Set([]));
   // const [pageReload, setPageReload] = useState(false);
   const [search, setSearch] = useState("");
   const [taskRowObjects, setTaskRowObjects] = useState<any[]>([]);
   const [updateScreen, setUpdateScreen] = useState(false);
+  const [updateDate, setUpdateDate] = useState(1);
 
   /////////////////////
   const [userTimeZone, setUserTimeZone] = useState<string | null>(null);
@@ -78,6 +81,52 @@ export default function NewProject() {
     const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     setUserTimeZone(userTimeZone);
   }, []);
+  //////////////////////
+
+  useEffect(() => {
+    const differenceInDays = getDateDifference(enddate, startdate);
+    dateCountChangeEvent(differenceInDays);
+  }, [startdate, enddate]);
+
+  // useEffect(() => {
+  //   setEnddate(enddate1);
+  // }, [enddate1]);
+
+  useEffect(() => {
+    const tmpStartDate = new Date(startdate);
+    const resultDate = new Date(tmpStartDate);
+    resultDate.setDate(tmpStartDate.getDate() + datecount * 1);
+    const year = resultDate.getFullYear();
+    const month = (resultDate.getMonth() + 1).toString().padStart(2, "0");
+    const day = resultDate.getDate().toString().padStart(2, "0");
+    const formattedItemDate = `${year}-${month}-${day}`;
+    setEnddate(formattedItemDate);
+    // setEnddate(formattedItemDate);
+  }, [updateDate]);
+
+  const dateCountChangeEvent = (value) => {
+    setDatecount(value);
+    setUpdateDate((prv: any) => prv + 1);
+  };
+
+  /////////////////////
+  // useEffect(() => {
+  //   console.log("startdate", startdate);
+  //   const differenceInDays = getDateDifference(enddate, startdate);
+  //   setDatecount(differenceInDays);
+  // }, [updateDate]);
+
+  // useEffect(() => {
+  //   const tmpStartDate = new Date(startdate);
+  //   const resultDate = new Date(tmpStartDate);
+  //   resultDate.setDate(tmpStartDate.getDate() + datecount * 1);
+  //   const year = resultDate.getFullYear();
+  //   const month = (resultDate.getMonth() + 1).toString().padStart(2, "0");
+  //   const day = resultDate.getDate().toString().padStart(2, "0");
+  //   const formattedItemDate = `${year}-${month}-${day}`;
+  //   setEnddate(formattedItemDate);
+  //   setUpdateDate((prv: boolean) => !prv);
+  // }, [datecount, startdate]);
   //////////////////////
 
   const toggleAssignSave = () => {
@@ -149,7 +198,7 @@ export default function NewProject() {
           pathname + "/api/project/get-as-project?projectid=" + selProjectid
         );
         const res = await reponse.json();
-        console.log("res", res);
+        // console.log("res", res);
         const project = res.project[0];
         let projectTasks = res.projectTasks;
         // console.log("project.projectid", projectTasks);
@@ -160,6 +209,20 @@ export default function NewProject() {
         setStartdate(project.startdate);
         setEnddate(project.enddate);
         setProjectstatus(new Set([project.projectstatus]));
+
+        // ////////set date count
+        // const date1: any = new Date(project.enddate);
+        // const date2: any = new Date(project.startdate);
+        // const differenceMilliseconds: any = date1 - date2;
+
+        // const differenceInDays = Math.abs(
+        //   differenceMilliseconds / (1000 * 60 * 60 * 24)
+        // );
+        const differenceInDays = getDateDifference(
+          project.enddate,
+          project.startdate
+        );
+        dateCountChangeEvent(differenceInDays);
 
         projectTasks = projectTasks.map((t) => {
           return { ...t, show: true };
@@ -233,7 +296,9 @@ export default function NewProject() {
               theme: "colored",
             });
             // router.push("/project");
-            router.push("/project/new-project?projectid=" + jsonResponse.newProjectId);
+            router.push(
+              "/project/new-project?projectid=" + jsonResponse.newProjectId
+            );
           }
         } else {
           toast.info("Project should be contain at least one task!", {
@@ -389,6 +454,21 @@ export default function NewProject() {
     }
   };
 
+  const getDateDifference = (tmpenddate, tmpstartdate) => {
+    const date1: any = new Date(tmpenddate);
+    const date2: any = new Date(tmpstartdate);
+    const differenceMilliseconds: any = date1 - date2;
+
+    const differenceInDays = Math.abs(
+      differenceMilliseconds / (1000 * 60 * 60 * 24)
+    );
+    return differenceInDays;
+  };
+
+  const handleFocus = (event) => {
+    event.target.select();
+  };
+
   if (status === "loading") {
     return (
       <div>
@@ -465,12 +545,29 @@ export default function NewProject() {
                       onChange={(e) => setStartdate(e.target.value)}
                     />
                   </div>
-                  <div className="w-full sm:w-1/4">
-                    <NextDateInputField
-                      label="End Date"
-                      value={enddate}
-                      onChange={(e) => setEnddate(e.target.value)}
-                    />
+                  <div className="w-full sm:w-1/4 flex gap-2">
+                    <div className="w-full sm:w-3/5">
+                      <NextDateInputField
+                        label="End Date"
+                        value={enddate}
+                        onChange={(e) => setEnddate(e.target.value)}
+                      />
+                    </div>
+                    <span className="flex inline-block items-center justify-center font-semibold">
+                      OR
+                    </span>
+                    <div className="w-full sm:w-2/5">
+                      <Input
+                        type="number"
+                        variant="flat"
+                        label="No. of dates"
+                        size="sm"
+                        placeholder="Type here..."
+                        value={datecount}
+                        onChange={(e) => dateCountChangeEvent(e.target.value)}
+                        onFocus={handleFocus}
+                      />
+                    </div>
                   </div>
                   <div className="w-full sm:w-1/4">
                     <NextSelectInputField

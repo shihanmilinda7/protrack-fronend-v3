@@ -32,8 +32,10 @@ const Login = () => {
       "url('https://img.freepik.com/free-vector/flat-design-business-planning-concept_23-2149151729.jpg?w=1060&t=st=1698555917~exp=1698556517~hmac=fd5322c5d836a097671d554fd1ee76d6ba3f003dd7f16bb939a7ebc84eb913d8')",
   };
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("systemadmin@gmail.com");
+  const [password, setPassword] = useState("systemadmin");
+  const [rememberMe, setRememberMe] = useState(true);
+
   const [isVisible, setIsVisible] = React.useState(false);
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [dbname, setDbname] = useState("");
@@ -44,6 +46,17 @@ const Login = () => {
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   const router = useRouter();
+
+  useEffect(() => {
+    try {
+      const tmpEmail = localStorage.getItem("protrackemail");
+      if (tmpEmail) {
+        setEmail(tmpEmail);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }, []);
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
@@ -134,6 +147,11 @@ const Login = () => {
                 progress: undefined,
                 theme: "light",
               });
+              if (rememberMe) {
+                localStorage.setItem("protrackemail", email);
+              } else {
+                localStorage.removeItem("protrackemail");
+              }
               router.push("/dashboard");
             } else {
               //todo................
@@ -278,6 +296,20 @@ const Login = () => {
                 <RiLockPasswordLine className="inline-block h-6 w-6 text-slate-900" />
               }
             />
+          </div>
+          <div>
+            <label className="inline-flex items-center cursor-pointer">
+              <input
+                id="customCheckLogin"
+                type="checkbox"
+                className="form-checkbox border-0 rounded text-blueGray-700 ml-1 w-5 h-5 ease-linear transition-all duration-150"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+              />
+              <span className="ml-2 text-sm font-semibold text-blueGray-600">
+                Remember me
+              </span>
+            </label>
           </div>
           {isValidEmail === false && (
             <div className="w-full pl-1 pr-1">

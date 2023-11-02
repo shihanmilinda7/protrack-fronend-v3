@@ -9,6 +9,7 @@ import {
   Accordion,
   AccordionItem,
   Button,
+  Input,
   Table,
   TableBody,
   TableCell,
@@ -56,7 +57,12 @@ const NewProjectTask = ({
   );
   const [startdate, setStartdate] = useState(selRowObject?.startdate ?? "");
   const [enddate, setEnddate] = useState(selRowObject?.enddate ?? "");
+  const [enddate1, setEnddate1] = useState("");
   const [taskitems, setTaskitems] = useState(selRowObject?.taskitems ?? []);
+
+  const [datecount, setDatecount] = useState<any>(0);
+  const [updateDate, setUpdateDate] = useState(1);
+  const [updateDate1, setUpdateDate1] = useState(1);
 
   const customStyles = {
     overlay: {
@@ -83,11 +89,53 @@ const NewProjectTask = ({
   };
 
   useEffect(() => {
+    const differenceInDays = getDateDifference(enddate, startdate);
+    dateCountChangeEvent(differenceInDays, false);
+  }, [startdate, enddate]);
+
+  // useEffect(() => {
+  //   setUpdateDate1((prv: any) => prv + 1);
+  // }, [updateDate]);
+
+  useEffect(() => {
+    const tmpStartDate = new Date(startdate);
+    const resultDate = new Date(tmpStartDate);
+    resultDate.setDate(tmpStartDate.getDate() + datecount * 1);
+    const year = resultDate.getFullYear();
+    const month = (resultDate.getMonth() + 1).toString().padStart(2, "0");
+    const day = resultDate.getDate().toString().padStart(2, "0");
+    const formattedItemDate = `${year}-${month}-${day}`;
+    setEnddate(formattedItemDate);
+  }, [updateDate]);
+
+  useEffect(() => {
     setTaskitems(selRowObject?.taskitems ?? []);
   }, [selRowObject]);
 
+  const dateCountChangeEvent = (value, dateUpdate1 = true) => {
+    setDatecount(value);
+    if (dateUpdate1) {
+      setUpdateDate((prv: any) => prv + 1);
+    }
+  };
+
+  const getDateDifference = (tmpenddate, tmpstartdate) => {
+    const date1: any = new Date(tmpenddate);
+    const date2: any = new Date(tmpstartdate);
+    const differenceMilliseconds: any = date1 - date2;
+
+    const differenceInDays = Math.abs(
+      differenceMilliseconds / (1000 * 60 * 60 * 24)
+    );
+    return differenceInDays;
+  };
+
   const updateTaskItems = async (list) => {
     setTaskitems(list);
+  };
+
+  const handleFocus = (event) => {
+    event.target.select();
   };
 
   const addnewOrupdate = () => {
@@ -113,13 +161,13 @@ const NewProjectTask = ({
       );
     }
 
-    // setTaskid("");
-    // setTaskname("");
-    // setTaskdescription("");
-    // setStartdate("");
-    // setEnddate("");
-    // setTaskitems([]);
-    // selRowObject = [];
+    setTaskid("");
+    setTaskname("");
+    setTaskdescription("");
+    setStartdate("");
+    setEnddate("");
+    setTaskitems([]);
+    selRowObject = [];
     // setLabel("");
     // setType("")
   };
@@ -203,49 +251,74 @@ const NewProjectTask = ({
           New task
         </Button>
       )}
-      <Modal
-        isOpen={isOpen}
-        onRequestClose={() => setIsOpen(false)}
-        style={customStyles}
-        ariaHideApp={false}
-      >
-        <div className="pb-1">
-          <h1 className="text-2xl text-blue-800">{buttonName}</h1>
-        </div>
-        <div className="flex items-center justify-center">
-          <div className="mx-auto w-full min-w-[550px] p-6 max-h-[600px] overflow-y-auto">
-            <div className="flex flex-wrap">
-              <div className="w-full flex flex-col gap-3">
-                <NextAutoFocusTextInputField
-                  label="Task name"
-                  value={taskname}
-                  onChange={(e) => setTaskname(e.target.value)}
-                />
-                <NextTextInputField
-                  label="Task Description"
-                  value={taskdescription}
-                  onChange={(e) => setTaskdescription(e.target.value)}
-                />
-                <NextDateInputField
-                  label="Start Date"
-                  value={startdate}
-                  onChange={(e) => setStartdate(e.target.value)}
-                />
-                <NextDateInputField
+      {isOpen && (
+        <Modal
+          isOpen={isOpen}
+          onRequestClose={() => setIsOpen(false)}
+          style={customStyles}
+          ariaHideApp={false}
+        >
+          <div className="pb-1">
+            <h1 className="text-2xl text-blue-800">{buttonName}</h1>
+          </div>
+          <div className="flex items-center justify-center">
+            <div className="mx-auto w-full min-w-[550px] p-6 max-h-[600px] overflow-y-auto">
+              <div className="flex flex-wrap">
+                <div className="w-full flex flex-col gap-3">
+                  <NextAutoFocusTextInputField
+                    label="Task name"
+                    value={taskname}
+                    onChange={(e) => setTaskname(e.target.value)}
+                  />
+                  <NextTextInputField
+                    label="Task Description"
+                    value={taskdescription}
+                    onChange={(e) => setTaskdescription(e.target.value)}
+                  />
+                  <NextDateInputField
+                    label="Start Date"
+                    value={startdate}
+                    onChange={(e) => setStartdate(e.target.value)}
+                  />
+                  <div className="w-full flex gap-2">
+                    <div className="w-full sm:w-3/5">
+                      <NextDateInputField
+                        label="End Date"
+                        value={enddate}
+                        onChange={(e) => setEnddate(e.target.value)}
+                      />
+                    </div>
+                    <span className="flex inline-block items-center justify-center font-semibold">
+                      OR
+                    </span>
+                    <div className="w-full sm:w-2/5">
+                      <Input
+                        type="number"
+                        variant="flat"
+                        label="No. of dates"
+                        size="sm"
+                        placeholder="Type here..."
+                        value={datecount}
+                        onChange={(e) => dateCountChangeEvent(e.target.value)}
+                        onFocus={handleFocus}
+                      />
+                    </div>
+                  </div>
+                  {/* <NextDateInputField
                   label="End Date"
                   value={enddate}
                   onChange={(e) => setEnddate(e.target.value)}
+                /> */}
+                </div>
+              </div>
+              <div className="mt-2">
+                <TaskItemTable
+                  taskitems={taskitems}
+                  updateTaskItems={updateTaskItems}
                 />
               </div>
-            </div>
-            <div className="mt-2">
-              <TaskItemTable
-                taskitems={taskitems}
-                updateTaskItems={updateTaskItems}
-              />
-            </div>
-            {/* <h1>{JSON.stringify(selectedValue)}</h1> */}
-            {/* <div className="max-w-[550px]">
+              {/* <h1>{JSON.stringify(selectedValue)}</h1> */}
+              {/* <div className="max-w-[550px]">
               <Accordion
                 showDivider={false}
                 className="flex flex-col gap-1 w-full mt-3"
@@ -293,32 +366,33 @@ const NewProjectTask = ({
                 </AccordionItem>
               </Accordion>
             </div> */}
-            <div className="flex items-center justify-center mt-3">
-              <div className="flex gap-2">
-                <Button
-                  color="danger"
-                  variant="faded"
-                  onClick={() => setIsOpen(false)}
+              <div className="flex items-center justify-center mt-3">
+                <div className="flex gap-2">
+                  <Button
+                    color="danger"
+                    variant="faded"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Close
+                  </Button>
+                  <Button color="primary" onClick={addnewOrupdate}>
+                    Add to List
+                  </Button>
+                </div>
+                <div
+                  className={delButton ? "flex ml-auto" : "flex ml-auto hidden"}
                 >
-                  Close
-                </Button>
-                <Button color="primary" onClick={addnewOrupdate}>
-                  Add to List
-                </Button>
-              </div>
-              <div
-                className={delButton ? "flex ml-auto" : "flex ml-auto hidden"}
-              >
-                <IconConfirmAlertbox
-                  buttonName="Delete"
-                  leftButtonAction={deleteAction}
-                  description="Do you want to delete this record ?"
-                />
+                  <IconConfirmAlertbox
+                    buttonName="Delete"
+                    leftButtonAction={deleteAction}
+                    description="Do you want to delete this record ?"
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </Modal>
+        </Modal>
+      )}
     </div>
   );
 };

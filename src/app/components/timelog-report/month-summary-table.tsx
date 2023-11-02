@@ -14,6 +14,9 @@ import { AiFillPrinter } from "react-icons/ai";
 import ExcelJS from "exceljs";
 import { TimelogSummaryExcel } from "./month-summary-excel";
 
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+
 export const TimelogSummaryTable = ({
   rowObjectIn,
   tablePagination,
@@ -35,6 +38,54 @@ export const TimelogSummaryTable = ({
     0
   );
 
+  // const downloadAsPDF = () => {
+  //   const doc = new jsPDF();
+
+  //   // Set the content of the PDF using jsPDF
+  //   doc.text('CeyInfo Solutions - Monthly working summary', 15, 15);
+  //   doc.text(`Average Days - ${totalHours / 8} / Days`, 15, 25);
+  //   doc.text(`Total Hours - ${totalHours} / Hours`, 15, 35);
+
+  //   // Set the table content in PDF
+  //   const tableData = [];
+  //   dateRows.forEach((row, index) => {
+  //     const rowData = [];
+  //     // Add your row data to tableData array
+
+  //     tableData.push(rowData);
+  //   });
+
+  //   doc.autoTable({
+  //     head: [['Date', 'Day', 'Status', 'Total hours', 'Worked hours', 'Project', 'Task', 'Task item', 'Estimate count', 'Count', 'Activity notes']],
+  //     body: tableData,
+  //   });
+
+  //   // Download the PDF file
+  //   doc.save('table.pdf');
+  // };
+  // const downloadAsPDF = () => {
+  //   const doc = new jsPDF();
+
+  //   doc.text("CeyInfo Solutions - Monthly working summary", 15, 15);
+  //   doc.text(`Average Days - ${totalHours / 8} / Days`, 15, 25);
+  //   doc.text(`Total Hours - ${totalHours} / Hours`, 15, 35);
+
+  //   const tableData = dateRows.map((row) => [
+  //     row.dayDate,
+  //     row.dayName,
+  //     row.status,
+  //     row.totaltime,
+  //     // Add other row data as needed
+  //   ]);
+
+  //   // Now TypeScript should recognize the autoTable method
+  //   doc.autoTable({
+  //     head: [["Date", "Day", "Status", "Total hours" /* Add other headers */]],
+  //     body: tableData,
+  //   });
+
+  //   doc.save("table.pdf");
+  // };
   return (
     <div className="md:px-2 py-2 w-full">
       <div className={rowObjectIn.length > 0 ? "mr-2" : "hidden"}>
@@ -43,6 +94,7 @@ export const TimelogSummaryTable = ({
           staffname={staffname}
           totalHours={totalHours}
         />
+        {/* <button onClick={downloadAsPDF}>Download as PDF</button> */}
       </div>
       <div id="pdf-content">
         <div className="pb-1 w-full flex items-center justify-between">
@@ -51,7 +103,7 @@ export const TimelogSummaryTable = ({
               CeyInfo Solutions
             </span>
             <span className="pl-1 mx-auto text-base leading-none text-gray-900 select-none  flex items-center justify-center mt-1">
-              Monthly working summery
+              Monthly working summary
             </span>
           </div>
         </div>

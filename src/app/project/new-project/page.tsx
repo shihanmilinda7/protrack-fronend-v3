@@ -29,6 +29,7 @@ import IconConfirmAlertbox from "@/app/components/common-comp/icon-confirm-alert
 import timezones from "timezones-list";
 import { useSelector } from "react-redux";
 import NextNumberInputField from "@/app/components/common-comp/nextui-input-fields/next-number-input-fields";
+import ProjectAssignScreenV1 from "@/app/components/project/project-assign-v1";
 
 export default function NewProject() {
   //get pathname
@@ -72,7 +73,10 @@ export default function NewProject() {
   const [search, setSearch] = useState("");
   const [taskRowObjects, setTaskRowObjects] = useState<any[]>([]);
   const [updateScreen, setUpdateScreen] = useState(false);
+  const [updatePrpjectId, setUpdatePrpjectId] = useState(false);
   const [updateDate, setUpdateDate] = useState(1);
+
+  const [addMemberPopup, setAddMemberPopup] = useState(false);
 
   /////////////////////
   const [userTimeZone, setUserTimeZone] = useState<string | null>(null);
@@ -87,6 +91,16 @@ export default function NewProject() {
     const differenceInDays = getDateDifference(enddate, startdate);
     dateCountChangeEvent(differenceInDays);
   }, [startdate, enddate]);
+
+  useEffect(() => {
+    // console.log("selProjectid", selProjectid);
+    setProjectid(selProjectid);
+    toggleAssignSave();
+  }, [selProjectid]);
+
+  useEffect(() => {
+    setUpdatePrpjectId((prv: boolean) => !prv);
+  }, [projectid]);
 
   // useEffect(() => {
   //   setEnddate(enddate1);
@@ -131,6 +145,10 @@ export default function NewProject() {
 
   const toggleAssignSave = () => {
     setUpdateScreen((prv: boolean) => !prv);
+  };
+
+  const toggleAddMemberPopup = () => {
+    setAddMemberPopup(false);
   };
 
   const statusOptionValues = [
@@ -192,10 +210,10 @@ export default function NewProject() {
     // console.log(`Current time in ${timeZone}: ${formattedDate}`);
     // console.log("timezones", timezones);
     /////////////////////////////////////////////
-    if (selProjectid) {
+    if (projectid) {
       const fetchData = async () => {
         const reponse = await fetch(
-          pathname + "/api/project/get-as-project?projectid=" + selProjectid
+          pathname + "/api/project/get-as-project?projectid=" + projectid
         );
         const res = await reponse.json();
         // console.log("res", res);
@@ -234,7 +252,7 @@ export default function NewProject() {
       // call the function
       fetchData().catch(console.error);
     }
-  }, [updateScreen]);
+  }, [updateScreen, updatePrpjectId]);
 
   const cancelButton = () => {
     dispatch(setCurPrjTaskRowOj([]));
@@ -299,6 +317,74 @@ export default function NewProject() {
             router.push(
               "/project/new-project?projectid=" + jsonResponse.newProjectId
             );
+            setProjectid(jsonResponse.newProjectId);
+            toggleAssignSave();
+          }
+        } else {
+          toast.info("Project should be contain at least one task!", {
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
+      }
+    } catch (error) {
+      toast.error("Error!", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+  };
+
+  //add new project action
+  const addnew1 = async () => {
+    const validation = inputFieldValidation({
+      projectname,
+      projectdescription,
+      startdate,
+      enddate,
+    });
+    try {
+      //check input field empty or not
+      if (validation == 0) {
+        if (taskRowObjects.length > 0) {
+          //api call
+          const response = await fetch(
+            pathname + "/api/project/get-as-project",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                projectname,
+                projectdescription,
+                startdate,
+                enddate,
+                projectstatus: projectstatus.values().next().value,
+                taskRowObjects,
+              }),
+            }
+          );
+          const jsonResponse = await response.json();
+
+          if (jsonResponse.message == "SUCCESS") {
+            // router.push("/project");
+            router.push(
+              "/project/new-project?projectid=" + jsonResponse.newProjectId
+            );
+            setProjectid(jsonResponse.newProjectId);
+            toggleAssignSave();
+            setAddMemberPopup(true);
           }
         } else {
           toast.info("Project should be contain at least one task!", {
@@ -400,6 +486,68 @@ export default function NewProject() {
     }
   };
 
+  //update project action
+  const update1 = async () => {
+    const validation = inputFieldValidation({
+      projectname,
+      projectdescription,
+      startdate,
+      enddate,
+    });
+    try {
+      //check input field empty or not
+      if (validation == 0) {
+        if (taskRowObjects.length > 0) {
+          //api call
+          const response = await fetch(
+            pathname + "/api/project/get-as-project",
+            {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                projectid,
+                projectname,
+                projectdescription,
+                startdate,
+                enddate,
+                projectstatus: projectstatus.values().next().value,
+                taskRowObjects,
+              }),
+            }
+          );
+          const jsonResponse = await response.json();
+
+          if (jsonResponse == "SUCCESS") {
+            setAddMemberPopup(true);
+            toggleAssignSave();
+          }
+        } else {
+          toast.info("Project should be contain at least one task!", {
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
+      }
+    } catch (error) {
+      toast.error("Error!", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+  };
+
   const searchEvent = (e) => {
     setSearch(e.target.value);
     const tmpArray = [...taskRowObjects];
@@ -469,6 +617,49 @@ export default function NewProject() {
     event.target.select();
   };
 
+  // const handleAddMember = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  //   e.preventDefault();
+  //   submitButtonHandler(e);
+  // };
+
+  // const handleAddMember = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  //   e.preventDefault();
+  //   toast.warning(
+  //     "Need to save changes to add members. Do you want to proceed?",
+  //     {
+  //       position: toast.POSITION.TOP_CENTER,
+  //       autoClose: false, // This ensures the notification doesn't auto-close
+  //       closeOnClick: false, // This prevents the notification from closing when clicked
+  //       closeButton: (
+  //         <div>
+  //           <Button color="default" onClick={confirmHandler} className="mb-1">
+  //             Yes
+  //           </Button>
+  //           <Button
+  //             color="danger"
+  //             onClick={() => {
+  //               toast.dismiss();
+  //             }}
+  //           >
+  //             No
+  //           </Button>
+  //         </div>
+  //       ),
+  //     }
+  //   );
+  // };
+
+  const handleAddMember = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    console.log("addMemberPopup", addMemberPopup);
+    if (!projectid) {
+      await addnew1();
+    } else {
+      await update1();
+    }
+    dispatch(setCurPrjTaskRowOj([]));
+  };
+
   if (status === "loading") {
     return (
       <div>
@@ -499,26 +690,26 @@ export default function NewProject() {
               >
                 Go back
               </Button>
-              {/* <div>
-                {userTimeZone ? (
-                  <p>User Time Zone: {userTimeZone}</p>
-                ) : (
-                  <p>Loading...</p>
-                )}
-              </div> */}
             </div>
             <span className="text-2xl font-semibold leading-none text-gray-900 select-none pt-2 mr-auto">
               <span className="text-indigo-600">
                 {!projectid ? "New Project" : "Project - " + projectname}
               </span>
             </span>
-            {userRole == "User" || !projectid ? null : (
-              <ProjectAssignScreen
-                projectid={projectid}
-                projectname={projectname}
-                projectTasks={taskRowObjects}
-                updateMainScreen={toggleAssignSave}
-              />
+            {userRole == "User" ? null : (
+              <div>
+                <ProjectAssignScreenV1
+                  openPopup={addMemberPopup}
+                  projectid={projectid}
+                  projectname={projectname}
+                  projectTasks={taskRowObjects}
+                  updateMainScreen={toggleAssignSave}
+                  toggleAddMemberPopup={toggleAddMemberPopup}
+                />
+                <Button color="warning" onClick={handleAddMember}>
+                  Add member
+                </Button>
+              </div>
             )}
           </div>
           <div className="flex items-center justify-center p-2">
@@ -591,23 +782,6 @@ export default function NewProject() {
                       value={projectdescription}
                       onChange={(e) => setProjectdescription(e.target.value)}
                     />
-                    {/* <label
-                    htmlFor="projectdescription"
-                    className="mb-3 block text-base font-medium text-[#07074D]"
-                  >
-                    Project Description
-                  </label>
-                  <div className="mt-2 sm:w-5/5">
-                    <textarea
-                      id="projectdescription"
-                      name="projectdescription"
-                      rows={2}
-                      // cols={40}
-                      value={projectdescription}
-                      onChange={(e) => setProjectdescription(e.target.value)}
-                      className="p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
-                    />
-                  </div> */}
                   </div>
                 </div>
               </div>
@@ -644,7 +818,6 @@ export default function NewProject() {
                   arrayUpdateFuntion={updateTaskRowObjectArray}
                 />
               </div>
-              {/* {JSON.stringify(taskRowObjects)} */}
               <div className="flex px-3 w-full mt-2">
                 <div
                   className={
@@ -674,10 +847,6 @@ export default function NewProject() {
                     Save
                   </Button>
                 </div>
-
-                {/* <div className={showDelButton ? "flex ml-auto" : "flex ml-auto hidden"}>
-                <ConfirmAlertbox buttonName="Delete" leftButtonAction={deleteAction} title="Are you sure?" description="Do you want to delete this record ?" />
-              </div> */}
               </div>
             </div>
           </div>

@@ -165,6 +165,9 @@ const Navbar = () => {
         case "systemadmin-page":
           router.push("/systemadmin-page");
           break;
+        case "clients":
+          router.push("/clients");
+          break;
         // case "work-done-report":
         //   router.push("/work-done-report");
         //   break;
@@ -324,6 +327,24 @@ const Navbar = () => {
                 Staff
               </button>
             </li>
+            {/* <li
+              className={
+                userRole == "Admin" ||
+                userRole == "Manager" ||
+                userRole == "systemadmin"
+                  ? ""
+                  : "hidden"
+              }
+            >
+              <button
+                onClick={() => navButtonHandler("clients")}
+                className={
+                  currentRoute === "/clients" ? activeStyle : nonActiveStyle
+                }
+              >
+                Clients
+              </button>
+            </li> */}
             <li
               className={
                 userRole == "Admin" ||

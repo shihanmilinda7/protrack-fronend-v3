@@ -57,7 +57,7 @@ export const newLogin = async (userid) => {
 };
 
 export const newLogout = async (userid) => {
-  console.log("useriddddddd",userid,)
+  // console.log("useriddddddd",userid,)
   let rows;
   const transaction = db.transaction(() => {
     try {

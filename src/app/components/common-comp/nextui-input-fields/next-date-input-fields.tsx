@@ -5,18 +5,21 @@ const NextDateInputField = ({
   label,
   value,
   onChange,
+  isDisabled = false,
 }: {
   label: string;
   value: any;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  isDisabled?: any;
 }) => {
   return (
     <Input
+      isDisabled={isDisabled}
       type="date"
       variant="flat"
       label={label}
       size="sm"
-      placeholder="Type here..." 
+      placeholder="Type here..."
       value={value}
       onChange={onChange}
     />

@@ -742,6 +742,7 @@ export default function NewProject() {
                         label="End Date"
                         value={enddate}
                         onChange={(e) => setEnddate(e.target.value)}
+                        isDisabled={startdate ? false : true}
                       />
                     </div>
                     <span className="flex inline-block items-center justify-center font-semibold">
@@ -757,6 +758,7 @@ export default function NewProject() {
                         value={datecount}
                         onChange={(e) => dateCountChangeEvent(e.target.value)}
                         onFocus={handleFocus}
+                        isDisabled={startdate ? false : true}
                       />
                     </div>
                   </div>

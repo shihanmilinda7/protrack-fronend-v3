@@ -6,6 +6,5 @@ if (process.env.NODE_ENV === "development") {
 } else {
   // webSocket = io(process.env.SOCKET_URL);
   webSocket = io("https://socket.ceyinfo.cloud");
-
   // Code to run in production environmentds
 }

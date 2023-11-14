@@ -286,6 +286,7 @@ const NewProjectTask = ({
                         label="End Date"
                         value={enddate}
                         onChange={(e) => setEnddate(e.target.value)}
+                        isDisabled={startdate ? false : true}
                       />
                     </div>
                     <span className="flex inline-block items-center justify-center font-semibold">
@@ -301,6 +302,7 @@ const NewProjectTask = ({
                         value={datecount}
                         onChange={(e) => dateCountChangeEvent(e.target.value)}
                         onFocus={handleFocus}
+                        isDisabled={startdate ? false : true}
                       />
                     </div>
                   </div>

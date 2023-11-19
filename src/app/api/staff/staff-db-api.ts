@@ -41,7 +41,8 @@ export const newStaff = async (
   role,
   designation,
   country,
-  email
+  email,
+  timezone
 ) => {
   let rows;
   const transaction = db.transaction(() => {
@@ -52,7 +53,7 @@ export const newStaff = async (
         contactno,
         nic,
         designation,
-        country,createdAt,email) VALUES (?,?,?,?,?,?,?,?);`;
+        country,createdAt,email,timezone) VALUES (?,?,?,?,?,?,?,?,?);`;
 
       const staff = db
         .prepare(query1)
@@ -64,14 +65,15 @@ export const newStaff = async (
           designation,
           country,
           currentTimestamp.toISOString(),
-          email
+          email,
+          timezone
         );
 
       const query2 = `INSERT INTO users (staffid,
             username,
             password,
             role,
-            country,createdAt,email) VALUES (?,?,?,?,?,?,?);`;
+            country,createdAt,email,timezone) VALUES (?,?,?,?,?,?,?,?);`;
 
       db.prepare(query2).run(
         staff.lastInsertRowid,
@@ -80,7 +82,8 @@ export const newStaff = async (
         role,
         country,
         currentTimestamp.toISOString(),
-        email
+        email,
+        timezone
       );
     } catch (error) {
       console.error("Transaction error:", error);
@@ -101,7 +104,8 @@ export const updateStaff = async (
   role,
   designation,
   country,
-  email
+  email,
+  timezone
 ) => {
   let rows;
   const transaction = db.transaction(() => {
@@ -111,7 +115,7 @@ export const updateStaff = async (
       contactno = ?,
       nic = ?,
       designation = ?,
-      country = ? WHERE staffid = ?;`;
+      country = ?,timezone=? WHERE staffid = ?;`;
 
       db.prepare(query1).run(
         staffname,
@@ -120,15 +124,16 @@ export const updateStaff = async (
         nic,
         designation,
         country,
+        timezone,
         staffid
       );
 
       const query2 = `UPDATE users SET username = ?,
       country = ?,
-      role = ?
+      role = ?,timezone=?
       WHERE userid = ?;`;
 
-      db.prepare(query2).run(username, country, role, userid);
+      db.prepare(query2).run(username, country, role, timezone, userid);
     } catch (error) {
       console.error("Transaction error:", error);
     }

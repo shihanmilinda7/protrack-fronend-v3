@@ -26,7 +26,7 @@ export default function HomeLayout({
       <div className="flex flex-col w-full">
         <Navbar />
         <div className="flex ">
-          <SideNavbar />
+          {/* <SideNavbar /> */}
           <div className="flex overflow-auto w-full">{children}</div>
         </div>
       </div>

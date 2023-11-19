@@ -43,6 +43,7 @@ export async function POST(request: Request) {
     country,
     email,
     organizationid,
+    timezone,
   } = await request.json();
   const hashedPassword = await bcrypt.hash(password, 10);
   let message: string = "SUCCESS";
@@ -62,7 +63,8 @@ export async function POST(request: Request) {
       role,
       designation,
       country,
-      email
+      email,
+      timezone
     );
   } catch (error) {
     console.error("Error adding new staff:", error);
@@ -85,6 +87,7 @@ export async function PUT(request: Request) {
     designation,
     country,
     email,
+    timezone,
   } = await request.json();
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -101,7 +104,8 @@ export async function PUT(request: Request) {
       role,
       designation,
       country,
-      email
+      email,
+      timezone
     );
   } catch (error) {
     console.error("Error updating staff:", error);

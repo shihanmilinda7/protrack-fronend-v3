@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { StaffObj } from "./types";
 import { useRouter } from "next/navigation";
@@ -21,6 +21,7 @@ import NextEmailInputField, {
   validateGmailAddress,
 } from "../common-comp/nextui-input-fields/next-email-input-fields";
 import { useSession } from "next-auth/react";
+import ct from "countries-and-timezones";
 
 type ParamTypes = {
   buttonName: string;
@@ -80,6 +81,12 @@ const StaffAddNew = (params: ParamTypes) => {
   const [country, setCountry] = useState<any["value"]>(
     params.selRowData?.country ?? "LK"
   );
+  const [timezone, setTimezone] = useState(
+    params.selRowData?.timezone
+      ? new Set([params.selRowData?.timezone.toString()])
+      : new Set([])
+  );
+  const [timezoneList, setTimezoneList] = useState([]);
 
   const [isValidEmail, setIsValidEmail] = useState(true);
 
@@ -132,6 +139,16 @@ const StaffAddNew = (params: ParamTypes) => {
     { value: "Security Engineer ", name: "Security Engineer " },
   ];
 
+  useEffect(() => {
+    const tmpCountry = ct.getCountry(country);
+    const tmpArray = tmpCountry.timezones.map((t: any) => ({
+      value: t,
+      name: t,
+    }));
+    setTimezoneList(tmpArray);
+    // console.log("tmpCountry", tmpCountry.timezones);
+  }, [country]);
+
   const submitButtonHandler = async (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
@@ -173,6 +190,7 @@ const StaffAddNew = (params: ParamTypes) => {
     const Contracttype = contracttype.values().next().value;
     const Role = role.values().next().value;
     const Designation = designation.values().next().value;
+    const Timezone = timezone.values().next().value;
     const validation = inputFieldValidation({
       staffname,
       Contracttype,
@@ -184,6 +202,7 @@ const StaffAddNew = (params: ParamTypes) => {
       Designation,
       country,
       email,
+      // Timezone,
     });
     try {
       //check input field empty or not
@@ -224,6 +243,7 @@ const StaffAddNew = (params: ParamTypes) => {
                 country,
                 email,
                 organizationid,
+                timezone: timezone.values().next().value,
               }),
             });
             const res = await responseNewStaff.json();
@@ -288,6 +308,8 @@ const StaffAddNew = (params: ParamTypes) => {
     const Contracttype = contracttype.values().next().value;
     const Role = role.values().next().value;
     const Designation = designation.values().next().value;
+    const Timezone = timezone.values().next().value;
+
     const validation = inputFieldValidation({
       staffname,
       Contracttype,
@@ -299,6 +321,7 @@ const StaffAddNew = (params: ParamTypes) => {
       Designation,
       country,
       email,
+      // Timezone,
     });
 
     try {
@@ -339,6 +362,7 @@ const StaffAddNew = (params: ParamTypes) => {
               designation: designation.values().next().value,
               country,
               email,
+              timezone: timezone.values().next().value,
             }),
           });
           const res = await responseUpdateStaff.json();
@@ -564,8 +588,8 @@ const StaffAddNew = (params: ParamTypes) => {
                 />
               </div>
             </div>
-            <div className="-mx-3 flex flex-wrap ">
-              <div className="w-full">
+            <div className="-mx-3 flex flex-wrap sm:flex-nowrap gap-2">
+              <div className="w-full sm:w-2/2">
                 <CountrySelector
                   id={"country-selector"}
                   open={isCountryListOpen}
@@ -576,6 +600,16 @@ const StaffAddNew = (params: ParamTypes) => {
                   )}
                 />
               </div>
+              {/* <div className="w-full sm:w-1/2">
+                <NextSelectInputField
+                  label="Timezone"
+                  value={timezone}
+                  onChange={(e) =>
+                    handleSelectChangeEvent(e, setTimezone, timezone)
+                  }
+                  optionValues={timezoneList}
+                />
+              </div> */}
             </div>
             <div
               className={`${

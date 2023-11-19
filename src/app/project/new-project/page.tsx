@@ -81,15 +81,15 @@ export default function NewProject() {
   /////////////////////
   const [userTimeZone, setUserTimeZone] = useState<string | null>(null);
 
-  useEffect(() => {
-    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    setUserTimeZone(userTimeZone);
-  }, []);
+  // useEffect(() => {
+  //   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  //   setUserTimeZone(userTimeZone);
+  // }, []);
   //////////////////////
 
   useEffect(() => {
     const differenceInDays = getDateDifference(enddate, startdate);
-    dateCountChangeEvent(differenceInDays);
+    dateCountChangeEvent(differenceInDays, false);
   }, [startdate, enddate]);
 
   useEffect(() => {
@@ -118,11 +118,17 @@ export default function NewProject() {
     // setEnddate(formattedItemDate);
   }, [updateDate]);
 
-  const dateCountChangeEvent = (value) => {
-    setDatecount(value);
-    setUpdateDate((prv: any) => prv + 1);
-  };
+  // const dateCountChangeEvent = (value) => {
+  //   setDatecount(value);
+  //   setUpdateDate((prv: any) => prv + 1);
+  // };
 
+  const dateCountChangeEvent = (value, dateUpdate1 = true) => {
+    setDatecount(value);
+    if (dateUpdate1) {
+      setUpdateDate((prv: any) => prv + 1);
+    }
+  };
   /////////////////////
   // useEffect(() => {
   //   console.log("startdate", startdate);

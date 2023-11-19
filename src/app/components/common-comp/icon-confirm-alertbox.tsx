@@ -10,12 +10,14 @@ type Props = {
   buttonName: string;
   leftButtonAction: DelButton;
   description: string;
+  isDisable?: any;
 };
 
 const IconConfirmAlertbox = ({
   buttonName,
   leftButtonAction,
   description,
+  isDisable,
 }: Props) => {
   const [showAlert, setShowAlert] = useState(false);
 
@@ -47,7 +49,13 @@ const IconConfirmAlertbox = ({
     toast.dismiss();
   };
   return (
-    <Button isIconOnly color="warning" variant="faded" aria-label="Create Item">
+    <Button
+      isIconOnly
+      color="warning"
+      variant="faded"
+      aria-label="Create Item"
+      isDisabled={isDisable}
+    >
       <RiDeleteBin5Line
         onClick={handleDelete}
         className="inline-block h-6 w-6 text-red-700 hover:text-red-500 cursor-pointer"

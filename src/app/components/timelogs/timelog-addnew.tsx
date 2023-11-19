@@ -106,7 +106,37 @@ const TimelogAddNew = ({
   }, [timelogEventsIn]);
 
   useEffect(() => {
-    setPickedDate(new Date(date));
+    // const formattedDate: any = inputDate.toLocaleString("en-US", {
+    //   weekday: "short",
+    //   month: "short",
+    //   day: "2-digit",
+    //   year: "numeric",
+    //   hour: "numeric",
+    //   minute: "numeric",
+    //   second: "numeric",
+    //   timeZoneName: "short",
+    // });
+    const userLocalTime = new Date();
+
+    // Get user's timezone offset in minutes
+    const timezoneOffsetMinutes = userLocalTime.getTimezoneOffset();
+
+    // Calculate GMT offset as a string
+    const gmtOffsetHours = Math.floor(Math.abs(timezoneOffsetMinutes) / 60);
+    const gmtOffsetMinutes = Math.abs(timezoneOffsetMinutes) % 60;
+    const gmtOffsetString =
+      (timezoneOffsetMinutes < 0 ? "+" : "-") +
+      (gmtOffsetHours < 10 ? "0" : "") +
+      gmtOffsetHours +
+      ":" +
+      (gmtOffsetMinutes < 10 ? "0" : "") +
+      gmtOffsetMinutes;
+
+    console.log(gmtOffsetString);
+
+    // setPickedDate(new Date("2023-11-01"));
+    const inputDate = new Date(`${date}T18:00:00${gmtOffsetString}`);
+    setPickedDate(inputDate);
   }, [date]);
 
   useEffect(() => {

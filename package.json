@@ -24,6 +24,7 @@
     "bcryptjs": "^2.4.3",
     "better-sqlite3": "^9.0.0",
     "bufferutil": "^4.0.8",
+    "countries-and-timezones": "^3.5.2",
     "crypto-js": "^4.2.0",
     "date-fns": "^2.30.0",
     "emailjs": "^4.0.3",

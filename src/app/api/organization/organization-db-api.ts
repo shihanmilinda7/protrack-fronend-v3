@@ -214,3 +214,17 @@ export const newCompanyStaff = async (
   transaction();
   return rows;
 };
+
+export const getActiveOrganization = async () => {
+  let rows;
+  const transaction = masterdb.transaction(() => {
+    try {
+      const query1 = `SELECT * FROM organizations WHERE status = 'Active';`;
+      rows = masterdb.prepare(query1).all();
+    } catch (error) {
+      console.error("Transaction error:", error);
+    }
+  });
+  transaction();
+  return rows;
+};

@@ -101,7 +101,13 @@ const TimelogAddNew = ({
   }, [isOpenPopup]);
 
   useEffect(() => {
-    const modifiedEvents = timelogEventsIn?.map((y) => new Date(y.start));
+    // console.log("timelogEventsIn", timelogEventsIn);
+    const gmtOffsetString = timezoneOffset();
+
+    const modifiedEvents = timelogEventsIn?.map(
+      (y) => new Date(`${y.start}T18:00:00${gmtOffsetString}`)
+    );
+    // const modifiedEvents = timelogEventsIn?.map((y) => new Date(y.start));
     setEvents(modifiedEvents);
   }, [timelogEventsIn]);
 
@@ -116,6 +122,38 @@ const TimelogAddNew = ({
     //   second: "numeric",
     //   timeZoneName: "short",
     // });
+    // const userLocalTime = new Date();
+
+    // // Get user's timezone offset in minutes
+    // const timezoneOffsetMinutes = userLocalTime.getTimezoneOffset();
+
+    // // Calculate GMT offset as a string
+    // const gmtOffsetHours = Math.floor(Math.abs(timezoneOffsetMinutes) / 60);
+    // const gmtOffsetMinutes = Math.abs(timezoneOffsetMinutes) % 60;
+    // const gmtOffsetString =
+    //   (timezoneOffsetMinutes < 0 ? "+" : "-") +
+    //   (gmtOffsetHours < 10 ? "0" : "") +
+    //   gmtOffsetHours +
+    //   ":" +
+    //   (gmtOffsetMinutes < 10 ? "0" : "") +
+    //   gmtOffsetMinutes;
+
+    // setPickedDate(new Date("2023-11-01"));
+
+    const gmtOffsetString = timezoneOffset();
+    const inputDate = new Date(`${date}T18:00:00${gmtOffsetString}`);
+    setPickedDate(inputDate);
+  }, [date]);
+
+  useEffect(() => {
+    fetchTimelogDetails();
+  }, [date, saveFlag]);
+
+  useEffect(() => {
+    fetchAssignProjects();
+  }, [staffid]);
+
+  const timezoneOffset = () => {
     const userLocalTime = new Date();
 
     // Get user's timezone offset in minutes
@@ -132,20 +170,8 @@ const TimelogAddNew = ({
       (gmtOffsetMinutes < 10 ? "0" : "") +
       gmtOffsetMinutes;
 
-    console.log(gmtOffsetString);
-
-    // setPickedDate(new Date("2023-11-01"));
-    const inputDate = new Date(`${date}T18:00:00${gmtOffsetString}`);
-    setPickedDate(inputDate);
-  }, [date]);
-
-  useEffect(() => {
-    fetchTimelogDetails();
-  }, [date, saveFlag]);
-
-  useEffect(() => {
-    fetchAssignProjects();
-  }, [staffid]);
+    return gmtOffsetString;
+  };
 
   const dateInputEvent = (dateValue) => {
     // console.log("dateValue", dateValue);

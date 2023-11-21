@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { UserListTable } from "../chatbox/userlist-table";
-import { calculateTotalHours } from "./utils";
 import { useSession } from "next-auth/react";
 import { DashboardUserListTable } from "./dashboard-userlist-table";
 
@@ -24,7 +23,7 @@ export const DashboardUserLoginTable = ({ toggleWs }: { toggleWs: any }) => {
   }
 
   const [userList, setUserList] = useState([]);
-  const [testSum, setTestSum] = useState<any>(0);
+  // const [testSum, setTestSum] = useState<any>(0);
   // const [activeUserList, setActiveuserList] = useState([]);
 
   const [displayUserList, setDisplayUserList] = useState([]);
@@ -82,8 +81,8 @@ export const DashboardUserLoginTable = ({ toggleWs }: { toggleWs: any }) => {
     const res = await reponse.json();
     // setUserList(res.userLoginDetails);
     /////////////////////
-    const userTotalLoginHours: any = calculateTotalHours(res.userLoginDetails);
-    setTestSum(userTotalLoginHours);
+    const userTotalLoginHours: any = res.modUserLoginDetails;
+    // setTestSum(userTotalLoginHours);
     //////////////////////
     const filteredLoginDetails = res.userLoginDetails?.filter(
       (detail) => detail.logouttime == ""

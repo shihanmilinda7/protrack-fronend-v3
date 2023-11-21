@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getUserLoginDetails, newLogin, newLogout } from "../login-db-api";
+import { calculateTotalHours } from "./utils";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -7,7 +8,8 @@ export async function GET(request: Request) {
 
   try {
     const userLoginDetails = await getUserLoginDetails();
-    res = { message: "SUCCESS", userLoginDetails };
+    const modUserLoginDetails = calculateTotalHours(userLoginDetails);
+    res = { message: "SUCCESS", userLoginDetails, modUserLoginDetails };
   } catch (error) {
     console.error("Error adding new staff:", error);
     res = { message: "FAIL" };

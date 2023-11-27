@@ -307,3 +307,17 @@ export const getProjectTaskCount = async (projectid) => {
   transaction();
   return rows.count;
 };
+
+export const getActiveProjects = async () => {
+  let rows;
+  const transaction = db.transaction(() => {
+    try {
+      const query = `SELECT * FROM projects WHERE projectstatus = 'Started';`;
+      rows = db.prepare(query).all();
+    } catch (error) {
+      console.error("Transaction error:", error);
+    }
+  });
+  transaction();
+  return rows;
+};

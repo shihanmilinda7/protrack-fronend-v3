@@ -11,6 +11,8 @@ import { webSocket } from "@/web-socket";
 import io from "socket.io-client";
 import UpdateEmptyLogoutSessions from "../components/dashboard-userlogindetails/update-empty-logout-sessions";
 import { updateDBConnection } from "@/db";
+import LineChart from "../components/chart/line-chart";
+import ChartDashboard from "../components/chart/dashboard-chart";
 
 type TaskDashBoardObj = {
   taskid?: number;
@@ -151,16 +153,28 @@ export default function Dashboard() {
         lastLoginTime={lastLoginDetails[0]?.logintime}
         toggleSave={toggleSave}
       />
-      <div className="flex w-full">
-        <div className="flex flex-col w-[80vw]">
+      <div className="flex w-full gap-1">
+        <div className="flex flex-col w-full sm:max-w-[80vw]">
           <h1 className="text-2xl m-4 text-blue-800 font-semibold">
             Elevate productivity today.
           </h1>
-
+          <div className="flex sm:max-w-[80vw] gap-1">
+            <ChartDashboard />
+            {/* <div className="">
+              <LineChart />
+            </div>
+            <div className="">
+              <LineChart />
+            </div> */}
+          </div>
+        </div>
+        <div className="flex flex-col w-[40vw] flex-wrap hidden">
           <div className="flex flex-wrap pt-4 z-48">
             <div
               className={
-                userRole == "Admin" || userRole == "Manager"
+                userRole == "Admin" ||
+                userRole == "Manager" ||
+                userRole == "systemadmin1"
                   ? "mt-4 w-full lg:w-6/12 xl:w-6/12 px-5 mb-4 max-h-48 overflow-auto z-0"
                   : "hidden"
               }
@@ -195,8 +209,10 @@ export default function Dashboard() {
 
             <div
               className={
-                userRole == "Admin" || userRole == "Manager"
-                  ? "mt-4 w-full lg:w-6/12 xl:w-6/12 px-5 mb-4 max-h-48 overflow-auto  z-48"
+                userRole == "Admin" ||
+                userRole == "Manager" ||
+                userRole == "systemadmin1"
+                  ? "mt-4 w-full lg:w-6/12 xl:w-6/12 px-5 mb-4 max-h-48 overflow-auto  z-48 hidden"
                   : "hidden"
               }
             >
@@ -230,8 +246,10 @@ export default function Dashboard() {
 
             <div
               className={
-                userRole == "User" || userRole == "Manager"
-                  ? "mt-4 w-full lg:w-6/12 xl:w-6/12 px-5 mb-4 max-h-48 overflow-auto  z-48"
+                userRole == "User" ||
+                userRole == "Manager" ||
+                userRole == "systemadmin"
+                  ? "mt-4 w-full lg:w-6/12 xl:w-6/12 px-5 mb-4 max-h-48 overflow-auto  z-48 hidden"
                   : "hidden"
               }
             >

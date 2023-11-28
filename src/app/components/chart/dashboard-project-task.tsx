@@ -38,7 +38,7 @@ const ChartProjectTask = ({ taskDetailsIn }: { taskDetailsIn?: any }) => {
           <h1 className="text-xl text-blue-800 font-semibold">
             {taskDetails.taskname}
             {/* <h2>{JSON.stringify(idealLineArray)}</h2> */}
-            {/* <h2>{JSON.stringify(taskDetails.taskitems)}</h2> */}
+            <h2>{JSON.stringify(taskDetails.taskitems)}</h2>
           </h1>
           {/* <h1 className="text-base text-blue-800">{dateDifferance}</h1> */}
           {/* <h1 className="text-xl text-blue-800 font-semibold">
@@ -56,3 +56,4 @@ const ChartProjectTask = ({ taskDetailsIn }: { taskDetailsIn?: any }) => {
 };
 
 export default ChartProjectTask;
+//SELECT t.*,td.*,sum(td.count) as totalcount FROM timelogs as t JOIN timelogsdetails as td ON t.timelogid = td.timelogid GROUP BY date, taskitemid

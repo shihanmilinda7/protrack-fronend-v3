@@ -8,6 +8,7 @@ import { Button, Input } from "@nextui-org/react";
 import NextTextInputField from "../common-comp/nextui-input-fields/next-text-input-fields";
 import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 export const TimelogTaskTableRow = ({
   index,
@@ -40,10 +41,12 @@ export const TimelogTaskTableRow = ({
       pathname = pathname.substring(0, r);
     }
   }
+  const date = useSelector((state: any) => state.timeAllocDateReducer.date);
 
   const [tableRow, setTableRow] = useState(timelogRowIn);
   const [tableRows, setTableRows] = useState(timelogRowsIn);
   const [assignTasks, setAssignTasks] = useState([]);
+  const [assignTasks1, setAssignTasks1] = useState([]);
   const [taskItems, setTaskItems] = useState([]);
 
   useEffect(() => {
@@ -125,6 +128,7 @@ export const TimelogTaskTableRow = ({
         projectid
     );
     const res = await reponse.json();
+    setAssignTasks1([...res.projectTasks]);
     const modifiedAssignTasksData = res.projectTasks?.map((p) => ({
       value: p.taskid,
       name: p.taskname,

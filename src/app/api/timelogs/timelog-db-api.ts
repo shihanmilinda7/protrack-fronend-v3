@@ -144,3 +144,17 @@ export const updateTimelog = async (
   transaction();
   return rows;
 };
+
+export const getTimelogDataAsItemid = async (itemid) => {
+  let rows;
+  const transaction = db.transaction(() => {
+    try {
+      const query1 = `SELECT t.*,td.*,SUM(td.count) as totalcount FROM timelogs as t JOIN timelogsdetails as td ON t.timelogid = td.timelogid  where td.taskitemid = ? GROUP BY date, taskitemid;`;
+      rows = db.prepare(query1).all(itemid);
+    } catch (error) {
+      console.error("Transaction error:", error);
+    }
+  });
+  transaction();
+  return rows;
+};

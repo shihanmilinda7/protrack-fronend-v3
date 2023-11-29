@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 
-const LineChart = ({ idealLineArrayIn }: { idealLineArrayIn: number[] }) => {
+const LineChart = ({
+  idealLineArrayIn,
+  currentLineArrayIn,
+}: {
+  idealLineArrayIn: number[];
+  currentLineArrayIn: number[];
+}) => {
   const [idealLineArray, setIdealLineArray] = useState<any>([]);
   const [chartSeries, setChartSeries] = useState([{ name: "", data: [] }]);
   const [DynamicChart, setDynamicChart] = useState(null);
@@ -16,7 +22,8 @@ const LineChart = ({ idealLineArrayIn }: { idealLineArrayIn: number[] }) => {
       enabled: false,
     },
     stroke: {
-      curve: "straight",
+      curve: "stepline",
+      // curve: "straight",
     },
     title: {
       text: "Task achivement rate",
@@ -28,23 +35,41 @@ const LineChart = ({ idealLineArrayIn }: { idealLineArrayIn: number[] }) => {
         opacity: 0.5,
       },
     },
-    categories: Array.from(
-      { length: idealLineArrayIn.length },
-      (_, i) => i + 1
-    ).map(String),
+    xaxis: {
+      categories: Array.from(
+        { length: idealLineArrayIn.length },
+        (_, i) => i + 1
+      ).map(String),
+      title: {
+        text: "Day count", // You can change this to the desired name for the x-axis
+      },
+    },
+    yaxis: {
+      title: {
+        text: "Esitmate count", // You can change this to the desired name for the y-axis
+      },
+    },
+    // categories: Array.from(
+    //   { length: idealLineArrayIn.length },
+    //   (_, i) => i + 1
+    // ).map(String),
   });
 
-  useEffect(() => {
-    const q = { ...idealLineArrayIn };
-    setIdealLineArray(q);
-  }, [idealLineArrayIn]);
+  // useEffect(() => {
+  //   const q = { ...idealLineArrayIn };
+  //   setIdealLineArray(q);
+  // }, [idealLineArrayIn]);
+  // useEffect(() => {
+  //   const q = { ...idealLineArrayIn };
+  //   setIdealLineArray(q);
+  // }, [idealLineArrayIn]);
 
   useEffect(() => {
     setChartSeries([
-      // {
-      //   name: "Ideal rate",
-      //   data: [0, 80, 35, 51, 49, 62, 69, 91, 150, 0, 0, null],
-      // },
+      {
+        name: "Current rate",
+        data: currentLineArrayIn,
+      },
       {
         name: "Ideal rate",
         data: idealLineArrayIn,
@@ -54,7 +79,7 @@ const LineChart = ({ idealLineArrayIn }: { idealLineArrayIn: number[] }) => {
     //   name: "Desktops1",
     //   data: idealLineArray,
     // }]);
-  }, [idealLineArray]);
+  }, [idealLineArrayIn, currentLineArrayIn]);
 
   useEffect(() => {
     const importChart = async () => {

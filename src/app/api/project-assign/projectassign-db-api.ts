@@ -4,7 +4,7 @@ export const getStaffAssignTask = async (projectid, staffid) => {
   let rows;
   const transaction = db.transaction(() => {
     try {
-      const query = `select pt.taskid,pt.taskname from projecttasksassigns as pta join projecttasks as pt on pta.taskid = pt.taskid where pta.projectid = ${projectid} and pta.staffid = ${staffid};`;
+      const query = `select pt.taskid,pt.taskname,pt.startdate from projecttasksassigns as pta join projecttasks as pt on pta.taskid = pt.taskid where pta.projectid = ${projectid} and pta.staffid = ${staffid};`;
 
       rows = db.prepare(query).all();
     } catch (error) {

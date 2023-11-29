@@ -82,15 +82,36 @@ export const TimelogTaskTableRow = ({
   };
 
   const taskSelectEvent = (e) => {
-    updateData({
-      ...tableRow,
-      taskid: e.target.value,
-      taskitemid: "",
-    });
-    if (e.target.value) {
-      getTasksItems(e.target.value);
-    } else {
-      setTaskItems([]);
+    const tmpTask = assignTasks1.find((t) => t.taskid == e.target.value);
+    if (tmpTask) {
+      const date1 = new Date(tmpTask.startdate);
+      const date2 = new Date(date);
+      if (date1 <= date2) {
+        updateData({
+          ...tableRow,
+          taskid: e.target.value,
+          taskitemid: "",
+        });
+        if (e.target.value) {
+          getTasksItems(e.target.value);
+        } else {
+          setTaskItems([]);
+        }
+      } else {
+        toast.info(
+          `The selected task is scheduled to start later than ${date}!`,
+          {
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          }
+        );
+      }
     }
   };
 

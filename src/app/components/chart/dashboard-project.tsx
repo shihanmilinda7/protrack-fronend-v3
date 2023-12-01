@@ -16,7 +16,7 @@ const ChartProject = ({ projectDetails }: { projectDetails?: any }) => {
     <div className="w-full overflow-x-auto">
       <ListboxWrapperType1>
         <h1 className="text-xl text-blue-800">{activeProject.projectname}</h1>
-        <div className="flex gap-1">
+        <div className="flex gap-1 flex-wrap sm:flex-nowrap">
           {activeProject.projecttasks?.map((p) => (
             <ChartProjectTask taskDetailsIn={p} />
           ))}

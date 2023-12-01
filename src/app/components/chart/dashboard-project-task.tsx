@@ -110,7 +110,7 @@ const ChartProjectTask = ({ taskDetailsIn }: { taskDetailsIn?: any }) => {
     fetchData().catch(console.error);
   };
   return (
-    <div className="min-w-[35vw] max-w-[35vw]">
+    <div className="sm:min-w-[35vw] sm:max-w-[35vw] w-[100vw]">
       <Card>
         <CardBody>
           <div className="flex justify-between">

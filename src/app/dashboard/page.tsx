@@ -153,12 +153,12 @@ export default function Dashboard() {
         lastLoginTime={lastLoginDetails[0]?.logintime}
         toggleSave={toggleSave}
       />
-      <div className="flex w-full gap-1">
+      <div className="flex w-full flex-wrap sm:flex-nowrap gap-1">
         <div className="flex flex-col w-full sm:max-w-[80vw]">
           <h1 className="text-2xl m-4 text-blue-800 font-semibold">
             Elevate productivity today.
           </h1>
-          <div className="flex sm:max-w-[80vw] gap-1">
+          <div className="flex gap-1">
             <ChartDashboard />
             {/* <div className="">
               <LineChart />
@@ -299,7 +299,7 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-        <div className={userRole == "User" ? "hidden" : "flex w-[20vw] mr-3"}>
+        <div className={userRole == "User" ? "hidden" : "flex sm:w-[20vw] w-full sm:mr-1"}>
           {/* <button onClick={toggleWs1}>click </button> */}
           <DashboardUserLoginTable toggleWs={logginCount} />
         </div>

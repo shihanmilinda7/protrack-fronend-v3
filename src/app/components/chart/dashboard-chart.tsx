@@ -20,7 +20,7 @@ const ChartDashboard = () => {
   };
   return (
     <div>
-      <div className="flex flex-col gap-1 pl-1 max-w-[80vw] overflow-x-auto">
+      <div className="flex flex-col gap-1 pl-1 overflow-x-auto w-full sm:w-[80vw] sm:max-w-[80vw]">
         {activeProjectData?.map((p) => (
           <ChartProject projectDetails={p} />
         ))}

@@ -3,13 +3,21 @@ import React, { useState, useEffect } from "react";
 const LineChart = ({
   idealLineArrayIn,
   currentLineArrayIn,
+  xaxis,
+  yaxis,
+  taskitemname = "Task achivement rate",
 }: {
   idealLineArrayIn: number[];
   currentLineArrayIn: number[];
+  xaxis: any;
+  yaxis: any;
+  taskitemname?: any;
 }) => {
-  const [idealLineArray, setIdealLineArray] = useState<any>([]);
   const [chartSeries, setChartSeries] = useState([{ name: "", data: [] }]);
   const [DynamicChart, setDynamicChart] = useState(null);
+  const [title, setTitle] = useState(
+    taskitemname ? taskitemname : "Task achivement rate"
+  );
   const [chartOptions, setChartOptions] = useState({
     chart: {
       height: 350,
@@ -26,7 +34,7 @@ const LineChart = ({
       // curve: "straight",
     },
     title: {
-      text: "Task achivement rate",
+      text: taskitemname,
       align: "left",
     },
     grid: {
@@ -41,28 +49,15 @@ const LineChart = ({
         (_, i) => i + 1
       ).map(String),
       title: {
-        text: "Day count", // You can change this to the desired name for the x-axis
+        text: xaxis, // You can change this to the desired name for the x-axis
       },
     },
     yaxis: {
       title: {
-        text: "Esitmate count", // You can change this to the desired name for the y-axis
+        text: yaxis, // You can change this to the desired name for the y-axis
       },
     },
-    // categories: Array.from(
-    //   { length: idealLineArrayIn.length },
-    //   (_, i) => i + 1
-    // ).map(String),
   });
-
-  // useEffect(() => {
-  //   const q = { ...idealLineArrayIn };
-  //   setIdealLineArray(q);
-  // }, [idealLineArrayIn]);
-  // useEffect(() => {
-  //   const q = { ...idealLineArrayIn };
-  //   setIdealLineArray(q);
-  // }, [idealLineArrayIn]);
 
   useEffect(() => {
     setChartSeries([
@@ -75,10 +70,6 @@ const LineChart = ({
         data: idealLineArrayIn,
       },
     ]);
-    // setChartSeries([{
-    //   name: "Desktops1",
-    //   data: idealLineArray,
-    // }]);
   }, [idealLineArrayIn, currentLineArrayIn]);
 
   useEffect(() => {
@@ -89,6 +80,60 @@ const LineChart = ({
 
     importChart();
   }, []);
+
+  useEffect(() => {
+    setTitle(taskitemname);
+  }, [taskitemname]);
+
+  useEffect(() => {
+    let maxLength;
+    if (idealLineArrayIn.length > 0 && currentLineArrayIn.length > 0) {
+      maxLength = Math.max(idealLineArrayIn.length, currentLineArrayIn.length);
+    } 
+    // else if (currentLineArrayIn.length == 0) {
+    //   maxLength = idealLineArrayIn.length;
+    // }
+    console.log("maxLength", maxLength);
+    setChartOptions({
+      chart: {
+        height: 350,
+        type: "line",
+        zoom: {
+          enabled: false,
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        curve: "stepline",
+        // curve: "straight",
+      },
+      title: {
+        text: title,
+        align: "left",
+      },
+      grid: {
+        row: {
+          colors: ["#f3f3f3", "transparent"],
+          opacity: 0.5,
+        },
+      },
+      xaxis: {
+        categories: Array.from({ length: maxLength }, (_, i) => i + 1).map(
+          String
+        ),
+        title: {
+          text: xaxis, // You can change this to the desired name for the x-axis
+        },
+      },
+      yaxis: {
+        title: {
+          text: yaxis, // You can change this to the desired name for the y-axis
+        },
+      },
+    });
+  }, [title]);
 
   if (!DynamicChart) {
     return <div>Loading...</div>;

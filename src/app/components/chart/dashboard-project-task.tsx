@@ -5,13 +5,16 @@ import { useEffect, useState } from "react";
 import { getDateDifference } from "./utils";
 import LineChart from "./line-chart";
 import { MdGridView } from "react-icons/md";
+import ChartPopup from "./chart-popup";
 
 const ChartProjectTask = ({ taskDetailsIn }: { taskDetailsIn?: any }) => {
   const [taskDetails, setTaskDetails] = useState<any>({});
   const [taskStartdate, setTaskStartdate] = useState<any>("");
   const [taskitemid, setTaskitemid] = useState<any>("");
+  const [taskid, setTaskid] = useState<any>("");
+  const [taskitemname, setTaskitemname] = useState<any>("");
   const [isMultyTaskItems, setIsMultyTaskItems] = useState<any>(false);
-  // const [dateDifferance, setDateDifferance] = useState<any>("");
+
   const [idealLineArray, setIdealLineArray] = useState<any>([]);
   const [currentLineArray, setCurrentLineArray] = useState<any>([]);
 
@@ -23,48 +26,60 @@ const ChartProjectTask = ({ taskDetailsIn }: { taskDetailsIn?: any }) => {
         ? 1
         : getDateDifference(q.enddate, q.startdate);
     setTaskStartdate(q.startdate);
-    // setDateDifferance(dateGap);
-    setTaskitemid(q.taskitems[0]?.taskitemid);
-    const tmpCount = q.taskitems[0]?.estimatecount / dateGap;
-    let i = 0;
-    let sum = 0;
-    const resultArray: number[] = [];
+    setTaskid(q.taskid);
+    let incrementCount: any = 0;
+    if (q.taskitems.length > 0) {
+      setTaskitemid(q.taskitems[0]?.taskitemid);
+      setTaskitemname(q.taskitems[0]?.description);
+      incrementCount = q.taskitems[0]?.estimatecount / dateGap;
 
-    while (i < dateGap) {
-      const tmpSum = sum + tmpCount;
-      const roundedNumber = parseFloat(tmpSum.toFixed(2));
-      resultArray.push(roundedNumber);
-      sum += tmpCount;
-      i += 1;
+      const resultArray = createIdealLineArray(dateGap, incrementCount);
+      setIdealLineArray(resultArray);
+      if (q.taskitems.length > 1) {
+        setIsMultyTaskItems(true);
+      }
+    } else {
+      const resultArray = createIdealLineArray(dateGap, 8);
+      setIdealLineArray(resultArray);
     }
-    setIdealLineArray(resultArray);
-    if (q.taskitems.length > 1) {
-      setIsMultyTaskItems(true);
-    }
-    // console.log("resultArray", q.taskitems[0]?.taskitemid, dateGap);
-    // console.log("dateArray(", dateArray());
   }, [taskDetailsIn]);
 
   useEffect(() => {
     if (taskitemid) {
       getTimelogDataAsItemid();
+    } else {
+      if (taskid) {
+        getTimelogDataAsTask();
+      }
     }
-  }, [taskitemid]);
+  }, [taskitemid, taskid]);
+
+  const createIdealLineArray = (dateGap, increment) => {
+    let i = 0;
+    let sum = 0;
+    const resultArray: number[] = [];
+
+    while (i < dateGap) {
+      const tmpSum = sum + increment;
+      const roundedNumber = parseFloat(tmpSum.toFixed(2));
+      resultArray.push(roundedNumber);
+      sum += increment;
+      i += 1;
+    }
+
+    return resultArray;
+  };
 
   const dateArray = (startDate, endDate) => {
-    // Start and end dates
     const tmpStartDate: any = new Date(startDate);
-    // const endDate = new Date("2023-10-22"); // Adjust the end date as needed
 
-    // Calculate the number of days between start and end dates
     const daysToForward =
       Math.floor((endDate - tmpStartDate) / (24 * 60 * 60 * 1000)) + 1;
 
-    // Create an array of dates
     const dateArray: any = Array.from({ length: daysToForward }, (_, index) => {
       const result = new Date(startDate);
       result.setDate(result.getDate() + index);
-      return result; // Add this line to return the date
+      return result;
     });
 
     const formattedDateArray = dateArray.map(
@@ -73,7 +88,7 @@ const ChartProjectTask = ({ taskDetailsIn }: { taskDetailsIn?: any }) => {
 
     return formattedDateArray;
   };
-
+  //
   const getTimelogDataAsItemid = async () => {
     const fetchData = async () => {
       const details = await fetch(
@@ -86,15 +101,11 @@ const ChartProjectTask = ({ taskDetailsIn }: { taskDetailsIn?: any }) => {
       }, new Date(0));
 
       const datesArray = dateArray(taskStartdate, maxDate);
-      // console.log("res", res.timelogData);
       const resultArray = datesArray.map((date) => {
-        // Find the object with a matching date in dataObjectsArray
         const matchingObject = res.timelogData.find((obj) => obj.date === date);
 
-        // If a match is found, extract the count; otherwise, set count to 0
         const count = matchingObject ? matchingObject.count : 0;
 
-        // Return an object with the date and count
         return { date, count };
       });
       let cumulativeCount = 0;
@@ -103,10 +114,38 @@ const ChartProjectTask = ({ taskDetailsIn }: { taskDetailsIn?: any }) => {
         return cumulativeCount;
       });
       setCurrentLineArray(cumulativeArray);
-      // console.log("resultArray", cumulativeArray);
     };
 
-    // call the function
+    fetchData().catch(console.error);
+  };
+
+  const getTimelogDataAsTask = async () => {
+    const fetchData = async () => {
+      const details = await fetch(
+        "api/timelogs/get-timelog-as-task?taskid=" + taskid
+      );
+      const res = await details.json();
+      const maxDate = res.timelogData.reduce((max, log) => {
+        const currentDate = new Date(log.date);
+        return currentDate > max ? currentDate : max;
+      }, new Date(0));
+
+      const datesArray = dateArray(taskStartdate, maxDate);
+      const resultArray = datesArray.map((date) => {
+        const matchingObject = res.timelogData.find((obj) => obj.date === date);
+
+        const time = matchingObject ? matchingObject.time : 0;
+
+        return { date, time };
+      });
+      let cumulativeTime = 0;
+      const cumulativeArray = resultArray.map((item) => {
+        cumulativeTime += item.time;
+        return cumulativeTime;
+      });
+      setCurrentLineArray(cumulativeArray);
+    };
+
     fetchData().catch(console.error);
   };
   return (
@@ -116,26 +155,33 @@ const ChartProjectTask = ({ taskDetailsIn }: { taskDetailsIn?: any }) => {
           <div className="flex justify-between">
             <h1 className="text-xl text-blue-800 font-semibold">
               {taskDetails.taskname}
-              {/* <h2>{JSON.stringify(idealLineArray)}</h2> */}
-              {/* <h2>{JSON.stringify(currentLineArray)}</h2> */}
+              {/* {JSON.stringify(taskDetails)} */}
             </h1>
             {isMultyTaskItems ? (
-              <Button color="primary" isIconOnly>
-                <MdGridView className="h-4 w-4" />
-              </Button>
-            ) : null}
+              <ChartPopup taskDetailsIn={taskDetails}/>
+            ) : // <Button color="primary" isIconOnly>
+            //   <MdGridView className="h-4 w-4" />
+            // </Button>
+            null}
           </div>
-          {/* <h1 className="text-base text-blue-800">{dateDifferance}</h1> */}
-          {/* <h1 className="text-xl text-blue-800 font-semibold">
-            {JSON.stringify(taskDetails)}
-          </h1> */}
           {taskDetails?.taskitems?.length == 0 ? (
-            <h2 className="text-blue-800">Coming soon...</h2>
+            <div>
+              {/* <a>{JSON.stringify(currentLineArray)}</a> */}
+              <LineChart
+                idealLineArrayIn={idealLineArray}
+                currentLineArrayIn={currentLineArray}
+                xaxis="Day count"
+                yaxis="Hours"
+              />
+            </div>
           ) : (
             <div>
               <LineChart
                 idealLineArrayIn={idealLineArray}
                 currentLineArrayIn={currentLineArray}
+                taskitemname={taskitemname}
+                xaxis="Day count"
+                yaxis="Estimate count"
               />
             </div>
           )}

@@ -98,14 +98,16 @@ const NewProjectTask = ({
   // }, [updateDate]);
 
   useEffect(() => {
-    const tmpStartDate = new Date(startdate);
-    const resultDate = new Date(tmpStartDate);
-    resultDate.setDate(tmpStartDate.getDate() + datecount * 1);
-    const year = resultDate.getFullYear();
-    const month = (resultDate.getMonth() + 1).toString().padStart(2, "0");
-    const day = resultDate.getDate().toString().padStart(2, "0");
-    const formattedItemDate = `${year}-${month}-${day}`;
-    setEnddate(formattedItemDate);
+    if (datecount) {
+      const tmpStartDate = new Date(startdate);
+      const resultDate = new Date(tmpStartDate);
+      resultDate.setDate(tmpStartDate.getDate() + datecount * 1);
+      const year = resultDate.getFullYear();
+      const month = (resultDate.getMonth() + 1).toString().padStart(2, "0");
+      const day = resultDate.getDate().toString().padStart(2, "0");
+      const formattedItemDate = `${year}-${month}-${day}`;
+      setEnddate(formattedItemDate);
+    }
   }, [updateDate]);
 
   useEffect(() => {
@@ -259,7 +261,9 @@ const NewProjectTask = ({
           ariaHideApp={false}
         >
           <div className="pb-1">
-            <h1 className="text-2xl text-blue-800">{buttonName}</h1>
+            <h1 className="text-2xl text-blue-800">
+              {buttonName} {startdate} {datecount}
+            </h1>
           </div>
           <div className="flex items-center justify-center">
             <div className="mx-auto w-full min-w-[550px] p-6 max-h-[600px] overflow-y-auto">

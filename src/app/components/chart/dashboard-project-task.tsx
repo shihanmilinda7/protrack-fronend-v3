@@ -2,7 +2,7 @@
 
 import { Button, Card, CardBody } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import { getDateDifference } from "./utils";
+import { createIdealLineArray, dateArray, getDateDifference } from "./utils";
 import LineChart from "./line-chart";
 import { MdGridView } from "react-icons/md";
 import ChartPopup from "./chart-popup";
@@ -54,40 +54,6 @@ const ChartProjectTask = ({ taskDetailsIn }: { taskDetailsIn?: any }) => {
     }
   }, [taskitemid, taskid]);
 
-  const createIdealLineArray = (dateGap, increment) => {
-    let i = 0;
-    let sum = 0;
-    const resultArray: number[] = [];
-
-    while (i < dateGap) {
-      const tmpSum = sum + increment;
-      const roundedNumber = parseFloat(tmpSum.toFixed(2));
-      resultArray.push(roundedNumber);
-      sum += increment;
-      i += 1;
-    }
-
-    return resultArray;
-  };
-
-  const dateArray = (startDate, endDate) => {
-    const tmpStartDate: any = new Date(startDate);
-
-    const daysToForward =
-      Math.floor((endDate - tmpStartDate) / (24 * 60 * 60 * 1000)) + 1;
-
-    const dateArray: any = Array.from({ length: daysToForward }, (_, index) => {
-      const result = new Date(startDate);
-      result.setDate(result.getDate() + index);
-      return result;
-    });
-
-    const formattedDateArray = dateArray.map(
-      (date) => date.toISOString().split("T")[0]
-    );
-
-    return formattedDateArray;
-  };
   //
   const getTimelogDataAsItemid = async () => {
     const fetchData = async () => {
@@ -158,7 +124,7 @@ const ChartProjectTask = ({ taskDetailsIn }: { taskDetailsIn?: any }) => {
               {/* {JSON.stringify(taskDetails)} */}
             </h1>
             {isMultyTaskItems ? (
-              <ChartPopup taskDetailsIn={taskDetails}/>
+              <ChartPopup taskDetailsIn={taskDetails} />
             ) : // <Button color="primary" isIconOnly>
             //   <MdGridView className="h-4 w-4" />
             // </Button>
@@ -179,7 +145,7 @@ const ChartProjectTask = ({ taskDetailsIn }: { taskDetailsIn?: any }) => {
               <LineChart
                 idealLineArrayIn={idealLineArray}
                 currentLineArrayIn={currentLineArray}
-                taskitemname={taskitemname}
+                titleIn={taskitemname}
                 xaxis="Day count"
                 yaxis="Estimate count"
               />

@@ -5,18 +5,18 @@ const LineChart = ({
   currentLineArrayIn,
   xaxis,
   yaxis,
-  taskitemname = "Task achivement rate",
+  titleIn = "Task achivement rate",
 }: {
   idealLineArrayIn: number[];
   currentLineArrayIn: number[];
   xaxis: any;
   yaxis: any;
-  taskitemname?: any;
+  titleIn?: any;
 }) => {
   const [chartSeries, setChartSeries] = useState([{ name: "", data: [] }]);
   const [DynamicChart, setDynamicChart] = useState(null);
   const [title, setTitle] = useState(
-    taskitemname ? taskitemname : "Task achivement rate"
+    titleIn ? titleIn : "Task achivement rate"
   );
   const [chartOptions, setChartOptions] = useState({
     chart: {
@@ -34,7 +34,7 @@ const LineChart = ({
       // curve: "straight",
     },
     title: {
-      text: taskitemname,
+      text: titleIn,
       align: "left",
     },
     grid: {
@@ -82,14 +82,15 @@ const LineChart = ({
   }, []);
 
   useEffect(() => {
-    setTitle(taskitemname);
-  }, [taskitemname]);
+    setTitle(titleIn);
+    // console.log("titleIn", titleIn);
+  }, [titleIn]);
 
   useEffect(() => {
     let maxLength;
     if (idealLineArrayIn.length > 0 && currentLineArrayIn.length > 0) {
       maxLength = Math.max(idealLineArrayIn.length, currentLineArrayIn.length);
-    } 
+    }
     // else if (currentLineArrayIn.length == 0) {
     //   maxLength = idealLineArrayIn.length;
     // }

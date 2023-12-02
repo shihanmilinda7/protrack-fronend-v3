@@ -249,7 +249,7 @@ const Navbar = () => {
               fill="#74E8AE"
             />
           </svg>
-          <span className="pl-1 mx-auto text-xl font-black leading-none text-gray-900 select-none  flex items-center justify-center">
+          <span onClick={() => navButtonHandler("dashboard")} className="cursor-pointer pl-1 mx-auto text-xl font-black leading-none text-gray-900 select-none  flex items-center justify-center">
             CeyInfo
             <span className="text-indigo-600">
               ProTrack - {organizationname}

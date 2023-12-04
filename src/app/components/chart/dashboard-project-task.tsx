@@ -17,6 +17,7 @@ const ChartProjectTask = ({ taskDetailsIn }: { taskDetailsIn?: any }) => {
 
   const [idealLineArray, setIdealLineArray] = useState<any>([]);
   const [currentLineArray, setCurrentLineArray] = useState<any>([]);
+  const [requiredLineArray, setRequiredLineArray] = useState<any>([]);
 
   useEffect(() => {
     const q = { ...taskDetailsIn };
@@ -54,6 +55,30 @@ const ChartProjectTask = ({ taskDetailsIn }: { taskDetailsIn?: any }) => {
     }
   }, [taskitemid, taskid]);
 
+  useEffect(() => {
+    // console.log("sasdasd", idealLineArray.length >= currentLineArray.length);
+    if (idealLineArray.length >= currentLineArray.length) {
+      if (
+        idealLineArray[idealLineArray.length - 1] >=
+          currentLineArray[currentLineArray.length - 1] ||
+        currentLineArray.length == 0
+      ) {
+        const tmpDateGap = idealLineArray.length - currentLineArray.length;
+        const tmpIncrementCount =
+          (idealLineArray[idealLineArray.length - 1] -
+            currentLineArray[currentLineArray.length - 1]) /
+          tmpDateGap;
+        const resultArray = createIdealLineArray(tmpDateGap, tmpIncrementCount);
+        const tmpArray = [...currentLineArray,...resultArray]
+        // setIdealLineArray(resultArray);
+        setRequiredLineArray(tmpArray);
+      } else {
+        setRequiredLineArray([]);
+      }
+    } else {
+      setRequiredLineArray([]);
+    }
+  }, [idealLineArray, currentLineArray]);
   //
   const getTimelogDataAsItemid = async () => {
     const fetchData = async () => {
@@ -121,7 +146,11 @@ const ChartProjectTask = ({ taskDetailsIn }: { taskDetailsIn?: any }) => {
           <div className="flex justify-between">
             <h1 className="text-xl text-blue-800 font-semibold">
               {taskDetails.taskname}
-              {/* {JSON.stringify(taskDetails)} */}
+              {/* --
+              {JSON.stringify(idealLineArray)}
+              --
+              {JSON.stringify(currentLineArray)}--
+              {JSON.stringify(requiredLineArray)} */}
             </h1>
             {isMultyTaskItems ? (
               <ChartPopup taskDetailsIn={taskDetails} />
@@ -136,6 +165,7 @@ const ChartProjectTask = ({ taskDetailsIn }: { taskDetailsIn?: any }) => {
               <LineChart
                 idealLineArrayIn={idealLineArray}
                 currentLineArrayIn={currentLineArray}
+                requiredLineArrayIn={requiredLineArray}
                 xaxis="Day count"
                 yaxis="Hours"
               />
@@ -145,6 +175,7 @@ const ChartProjectTask = ({ taskDetailsIn }: { taskDetailsIn?: any }) => {
               <LineChart
                 idealLineArrayIn={idealLineArray}
                 currentLineArrayIn={currentLineArray}
+                requiredLineArrayIn={requiredLineArray}
                 titleIn={taskitemname}
                 xaxis="Day count"
                 yaxis="Estimate count"

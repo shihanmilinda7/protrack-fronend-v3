@@ -304,7 +304,6 @@ body {
   width: 4px;
   cursor: pointer;
   /*background-color: rgba(229, 231, 235, var(--bg-opacity));*/
-
 }
 .journal-scroll::-webkit-scrollbar-track {
   background-color: rgba(229, 231, 235, var(--bg-opacity));
@@ -315,4 +314,26 @@ body {
   cursor: pointer;
   background-color: #a0aec0;
   /*outline: 1px solid slategrey;*/
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #a1cbf8;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #0080ff;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #012b57;
 }

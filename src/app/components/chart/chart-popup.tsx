@@ -3,7 +3,7 @@
 import Modal from "react-modal";
 
 import React, { useEffect, useState } from "react";
-import { Button } from "@nextui-org/react";
+import { Button, Card, CardBody } from "@nextui-org/react";
 import { MdGridView } from "react-icons/md";
 import Head from "next/head";
 import { createIdealLineArray, dateArray, getDateDifference } from "./utils";
@@ -16,6 +16,7 @@ const ChartPopup = ({ taskDetailsIn }: { taskDetailsIn: any }) => {
   const [taskStartdate, setTaskStartdate] = useState<any>("");
   const [taskitemArray, setTaskitemArray] = useState<any>([]);
   const [taskitemArrayUpdate, setTaskitemArrayUpdate] = useState(1);
+  // const [taskitemArrayUpdate2, setTaskitemArrayUpdate2] = useState(1);
 
   const customStyles = {
     overlay: {
@@ -30,7 +31,7 @@ const ChartPopup = ({ taskDetailsIn }: { taskDetailsIn: any }) => {
       marginRight: "-50%",
       transform: "translate(-50%, -50%)",
       //   width: "95%", // Set default width to full on small screens
-      maxWidth: "1350px", // Set max-width for larger screens
+      maxWidth: "1125px", // Set max-width for larger screens
       maxHeight: "650px", // Set max-width for larger screens
       transition: "width 0.3s", // Add transition for smooth resizing
     },
@@ -38,7 +39,7 @@ const ChartPopup = ({ taskDetailsIn }: { taskDetailsIn: any }) => {
 
   const mediaQuery = `@media (min-width: 768px) {
     .ReactModal__Content {
-      width: 1300px !important; // Override width for larger screens
+      width: 1125px !important; // Override width for larger screens
     }
   }`;
 
@@ -74,6 +75,36 @@ const ChartPopup = ({ taskDetailsIn }: { taskDetailsIn: any }) => {
     }
   }, [taskitemArrayUpdate]);
 
+  // useEffect(() => {
+  //   if (taskitemArray.length > 0) {
+  //     createRequiredLines();
+  //   }
+  // }, [taskitemArrayUpdate2]);
+
+  const createRequiredLines = (idealArray, currentArray) => {
+    let tmpArray;
+    if (idealArray.length >= currentArray.length) {
+      if (
+        idealArray[idealArray.length - 1] >=
+          currentArray[currentArray.length - 1] ||
+        currentArray.length == 0
+      ) {
+        const tmpDateGap = idealArray.length - currentArray.length;
+        const tmpIncrementCount =
+          (idealArray[idealArray.length - 1] -
+            currentArray[currentArray.length - 1]) /
+          tmpDateGap;
+        const resultArray = createIdealLineArray(tmpDateGap, tmpIncrementCount);
+        tmpArray = [...currentArray, ...resultArray];
+      } else {
+        tmpArray = [];
+      }
+    } else {
+      tmpArray = [];
+    }
+    return tmpArray;
+  };
+
   const getTimelogDataAsItemid = async (tmpTaskitemid) => {
     const fetchData = async () => {
       const details = await fetch(
@@ -102,7 +133,13 @@ const ChartPopup = ({ taskDetailsIn }: { taskDetailsIn: any }) => {
       let tmpItem = taskitemArray.find((i) => i.taskitemid == tmpTaskitemid);
       if (tmpItem) {
         tmpItem["currentLineArray"] = cumulativeArray;
+        const tmpReqArray = createRequiredLines(
+          tmpItem["idealLineArray"],
+          cumulativeArray
+        );
+        tmpItem["requiredLineArray"] = tmpReqArray;
       }
+      // setTaskitemArrayUpdate2((prv: any) => prv + 1);
     };
 
     fetchData().catch(console.error);
@@ -122,6 +159,7 @@ const ChartPopup = ({ taskDetailsIn }: { taskDetailsIn: any }) => {
             onRequestClose={() => setIsOpen(false)}
             style={customStyles}
             ariaHideApp={false}
+            shouldCloseOnOverlayClick={false}
           >
             <div className="w-full flex flex-col">
               <div className="flex items-center justify-center">
@@ -137,15 +175,20 @@ const ChartPopup = ({ taskDetailsIn }: { taskDetailsIn: any }) => {
               </div>
               <div className="flex items-center justify-center">
                 <div className="mx-auto">
-                  <div className="flex flex-wrap">
+                  <div className="flex flex-wrap gap-3 mt-3">
                     {taskitemArray.map((ti) => (
-                      <LineChart
-                        idealLineArrayIn={ti.idealLineArray}
-                        currentLineArrayIn={ti.currentLineArray}
-                        titleIn={ti.description}
-                        xaxis="Day count"
-                        yaxis="Estimate count"
-                      />
+                      <Card>
+                        <CardBody>
+                          <LineChart
+                            idealLineArrayIn={ti.idealLineArray}
+                            currentLineArrayIn={ti.currentLineArray}
+                            requiredLineArrayIn={ti.requiredLineArray}
+                            titleIn={ti.description}
+                            xaxis="Day count"
+                            yaxis="Estimate count"
+                          />
+                        </CardBody>
+                      </Card>
                     ))}
                   </div>
                   {/* <div className="mt-2">{JSON.stringify(taskitemArray)}</div> */}

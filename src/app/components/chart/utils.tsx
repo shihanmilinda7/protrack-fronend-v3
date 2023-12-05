@@ -9,9 +9,9 @@ export const getDateDifference = (tmpenddate, tmpstartdate) => {
   return differenceInDays;
 };
 
-export const createIdealLineArray = (dateGap, increment) => {
+export const createIdealLineArray = (sum=0, dateGap, increment) => {
   let i = 0;
-  let sum = 0;
+  // sum = 0;
   const resultArray: number[] = [];
 
   while (i < dateGap) {

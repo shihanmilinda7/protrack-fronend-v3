@@ -34,13 +34,13 @@ const ChartProjectTask = ({ taskDetailsIn }: { taskDetailsIn?: any }) => {
       setTaskitemname(q.taskitems[0]?.description);
       incrementCount = q.taskitems[0]?.estimatecount / dateGap;
 
-      const resultArray = createIdealLineArray(dateGap, incrementCount);
+      const resultArray = createIdealLineArray(0, dateGap, incrementCount);
       setIdealLineArray(resultArray);
       if (q.taskitems.length > 1) {
         setIsMultyTaskItems(true);
       }
     } else {
-      const resultArray = createIdealLineArray(dateGap, 8);
+      const resultArray = createIdealLineArray(0, dateGap, 8);
       setIdealLineArray(resultArray);
     }
   }, [taskDetailsIn]);
@@ -68,8 +68,16 @@ const ChartProjectTask = ({ taskDetailsIn }: { taskDetailsIn?: any }) => {
           (idealLineArray[idealLineArray.length - 1] -
             currentLineArray[currentLineArray.length - 1]) /
           tmpDateGap;
-        const resultArray = createIdealLineArray(tmpDateGap, tmpIncrementCount);
-        const tmpArray = [...currentLineArray,...resultArray]
+        console.log(
+          "currentLineArray[currentLineArray.length - 1]",
+          currentLineArray[currentLineArray.length - 1]
+        );
+        const resultArray = createIdealLineArray(
+          currentLineArray[currentLineArray.length - 1],
+          tmpDateGap,
+          tmpIncrementCount
+        );
+        const tmpArray = [...currentLineArray, ...resultArray];
         // setIdealLineArray(resultArray);
         setRequiredLineArray(tmpArray);
       } else {

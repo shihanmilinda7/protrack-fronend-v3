@@ -58,7 +58,7 @@ const ChartPopup = ({ taskDetailsIn }: { taskDetailsIn: any }) => {
     for (let i = 0; i < q.taskitems.length; i++) {
       const item = q.taskitems[i];
       incrementCount = q.taskitems[i]?.estimatecount / dateGap;
-      const resultArray = createIdealLineArray(dateGap, incrementCount);
+      const resultArray = createIdealLineArray(0, dateGap, incrementCount);
       item["idealLineArray"] = resultArray;
       tmpItemArray.push(item);
     }
@@ -94,7 +94,11 @@ const ChartPopup = ({ taskDetailsIn }: { taskDetailsIn: any }) => {
           (idealArray[idealArray.length - 1] -
             currentArray[currentArray.length - 1]) /
           tmpDateGap;
-        const resultArray = createIdealLineArray(tmpDateGap, tmpIncrementCount);
+        const resultArray = createIdealLineArray(
+          currentArray[currentArray.length - 1],
+          tmpDateGap,
+          tmpIncrementCount
+        );
         tmpArray = [...currentArray, ...resultArray];
       } else {
         tmpArray = [];

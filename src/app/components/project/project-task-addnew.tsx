@@ -220,6 +220,17 @@ const NewProjectTask = ({
       status: "Vacation",
     },
   ];
+
+  const openPopup = () => {
+    setIsOpen(true);
+    setTaskid(selRowObject?.taskid ?? "");
+    setTaskname(selRowObject?.taskname ?? "");
+    setTaskdescription(selRowObject?.taskdescription ?? "");
+    setStartdate(selRowObject?.startdate ?? "");
+    setEnddate(selRowObject?.enddate ?? "");
+    setTaskitems(selRowObject?.taskitems ?? []);
+  };
+
   // const selectedValue = React.useMemo(
   //   () => Array.from(selectedKeys).join(", ").replaceAll("_", " "),
   //   [selectedKeys]
@@ -244,12 +255,12 @@ const NewProjectTask = ({
           className="mr-2"
         >
           <MdOutlineEditNote
-            onClick={() => setIsOpen(true)}
+            onClick={openPopup}
             className="inline-block h-6 w-6 text-indigo-700 hover:text-indigo-500 cursor-pointer"
           />
         </Button>
       ) : (
-        <Button color="primary" onClick={() => setIsOpen(true)}>
+        <Button color="primary" onClick={openPopup}>
           New task
         </Button>
       )}
@@ -261,9 +272,7 @@ const NewProjectTask = ({
           ariaHideApp={false}
         >
           <div className="pb-1">
-            <h1 className="text-2xl text-blue-800">
-              {buttonName} {startdate} {datecount}
-            </h1>
+            <h1 className="text-2xl text-blue-800">{buttonName}</h1>
           </div>
           <div className="flex items-center justify-center">
             <div className="mx-auto w-full min-w-[550px] p-6 max-h-[600px] overflow-y-auto">

@@ -122,6 +122,8 @@ const StaffAddNew = (params: ParamTypes) => {
   ];
 
   const designationOptionValues = [
+    { value: "GIS Specialist", name: "GIS Specialist" },
+    { value: "Junior GIS Specialist", name: "Junior GIS Specialist" },
     { value: "Software Engineer", name: "Software Engineer" },
     { value: "Front-End Developer", name: "Front-End Developer" },
     { value: "Back-End Developer", name: "Back-End Developer" },

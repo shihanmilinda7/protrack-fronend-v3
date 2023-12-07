@@ -280,11 +280,17 @@ export default function NewProject() {
 
   //add new project action
   const addnew = async () => {
+    const Project_Name = projectname;
+    const Project_Description = projectdescription;
+    const Start_Data = startdate;
+    const End_Data = enddate;
+    const Project_Status = projectstatus.values().next().value;
     const validation = inputFieldValidation({
-      projectname,
-      projectdescription,
-      startdate,
-      enddate,
+      Project_Name,
+      Project_Description,
+      Start_Data,
+      End_Data,
+      Project_Status,
     });
     try {
       //check input field empty or not
@@ -355,11 +361,17 @@ export default function NewProject() {
 
   //add new project action
   const addnew1 = async () => {
+    const Project_Name = projectname;
+    const Project_Description = projectdescription;
+    const Start_Data = startdate;
+    const End_Data = enddate;
+    const Project_Status = projectstatus.values().next().value;
     const validation = inputFieldValidation({
-      projectname,
-      projectdescription,
-      startdate,
-      enddate,
+      Project_Name,
+      Project_Description,
+      Start_Data,
+      End_Data,
+      Project_Status,
     });
     try {
       //check input field empty or not
@@ -421,11 +433,17 @@ export default function NewProject() {
 
   //update project action
   const update = async () => {
+    const Project_Name = projectname;
+    const Project_Description = projectdescription;
+    const Start_Data = startdate;
+    const End_Data = enddate;
+    const Project_Status = projectstatus.values().next().value;
     const validation = inputFieldValidation({
-      projectname,
-      projectdescription,
-      startdate,
-      enddate,
+      Project_Name,
+      Project_Description,
+      Start_Data,
+      End_Data,
+      Project_Status,
     });
     try {
       //check input field empty or not
@@ -494,11 +512,17 @@ export default function NewProject() {
 
   //update project action
   const update1 = async () => {
+    const Project_Name = projectname;
+    const Project_Description = projectdescription;
+    const Start_Data = startdate;
+    const End_Data = enddate;
+    const Project_Status = projectstatus.values().next().value;
     const validation = inputFieldValidation({
-      projectname,
-      projectdescription,
-      startdate,
-      enddate,
+      Project_Name,
+      Project_Description,
+      Start_Data,
+      End_Data,
+      Project_Status,
     });
     try {
       //check input field empty or not

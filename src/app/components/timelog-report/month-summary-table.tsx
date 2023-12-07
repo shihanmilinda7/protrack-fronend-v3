@@ -27,10 +27,14 @@ export const TimelogSummaryTable = ({
   staffname: any;
 }) => {
   const [dateRows, setDateRows] = useState([]);
+  const [workingDays, setWorkingDays] = useState<any>("");
 
   useEffect(() => {
     const q = [...rowObjectIn];
     setDateRows(q);
+
+    const tmpArray = q.filter((y) => y.totaltime != 0);
+    setWorkingDays(tmpArray.length);
   }, [rowObjectIn]);
 
   const totalHours = rowObjectIn?.reduce(
@@ -110,7 +114,8 @@ export const TimelogSummaryTable = ({
         <div className="flex">
           <span className="text-base font-semibold leading-none text-gray-900 select-none pt-2 ml-auto mr-16 mb-1  overflow-hidden">
             <span className="text-indigo-600">
-              Avarage Days - {totalHours / 8} /Days
+              Working Days - {workingDays} /Days
+              {/* Avarage Days - {totalHours / 8} /Days */}
             </span>
           </span>
           <span className="text-base font-semibold leading-none text-gray-900 select-none pt-2 ml-auto mr-16 mb-1  overflow-hidden">

@@ -166,7 +166,7 @@ export const newCompanyStaff = async (
 ) => {
   let rows;
   const tmpDb = await createDbPath(dbname);
-  console.log("dbname", dbname);
+  console.log("dbname", tmpDb);
   const transaction = tmpDb.transaction(() => {
     try {
       const currentTimestamp = new Date();

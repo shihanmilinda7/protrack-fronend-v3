@@ -179,64 +179,78 @@ export const TimelogSummaryTable = ({
                     {tableRow.totaltime}
                   </TableCell>
                   <TableCell className="border border-blue-500 px-0 p-0 m-0">
-                    <div className="flex flex-col">
+                    {/* <div className="flex flex-col"> */}
+                    <ul>
                       {tableRow.taskdetails &&
                         tableRow.taskdetails?.map((td) => (
-                          <ul className="py-1 px-3" key={td.timelogdetailid}>
-                            <li>{td.time ? td.time : "0"}</li>
-                          </ul>
+                          <li className="py-1 px-3" key={td.timelogdetailid}>
+                            {td.time ? td.time : "0"}
+                          </li>
                         ))}
-                    </div>
+                    </ul>
+                    {/* </div> */}
                   </TableCell>
                   <TableCell className="border border-blue-500 px-0 p-0 m-0">
-                    <div className="flex flex-col">
+                    {/* <div className="flex flex-col"> */}
+                    <ul>
                       {tableRow.taskdetails &&
                         tableRow.taskdetails?.map((td) => (
-                          <ul className="py-1 px-3" key={td.timelogdetailid}>
-                            <li>{td.projectname ? td.projectname : "-"}</li>
-                          </ul>
+                          <li className="py-1 px-3" key={td.timelogdetailid}>
+                            {td.projectname ? td.projectname : "-"}
+                          </li>
                         ))}
-                    </div>
+                      {/* </div> */}
+                    </ul>
                   </TableCell>
                   <TableCell className="border border-blue-500 px-0 p-0 m-0">
-                    {tableRow.taskdetails &&
-                      tableRow.taskdetails?.map((td) => (
-                        <ul className="py-1 px-3" key={td.timelogdetailid}>
-                          <li>{td.taskname ? td.taskname : "-"}</li>
-                        </ul>
-                      ))}
+                    <ul>
+                      {tableRow.taskdetails &&
+                        tableRow.taskdetails?.map((td) => (
+                          <li className="py-1 px-3" key={td.timelogdetailid}>
+                            {td.taskname ? td.taskname : "-"}
+                          </li>
+                        ))}
+                    </ul>
                   </TableCell>
                   <TableCell className="border border-blue-500 px-0 p-0 m-0">
-                    {tableRow.taskdetails &&
-                      tableRow.taskdetails?.map((td) => (
-                        <ul className="py-1 px-3" key={td.timelogdetailid}>
-                          <li>{td.description ? td.description : "-"}</li>
-                        </ul>
-                      ))}
+                    <ul>
+                      {tableRow.taskdetails &&
+                        tableRow.taskdetails?.map((td) => (
+                          <li className="py-1 px-3" key={td.timelogdetailid}>
+                            {td.description ? td.description : "-"}
+                          </li>
+                        ))}
+                    </ul>
                   </TableCell>
                   <TableCell className="border border-blue-500 font-semibold bg-gray-300">
-                    {tableRow.taskdetails &&
-                      tableRow.taskdetails?.map((td) => (
-                        <ul className="py-1 px-3" key={td.timelogdetailid}>
-                          <li>{td.estimatecount ? td.estimatecount : "-"}</li>
-                        </ul>
-                      ))}
+                    <ul>
+                      {tableRow.taskdetails &&
+                        tableRow.taskdetails?.map((td) => (
+                          <li className="py-1 px-3" key={td.timelogdetailid}>
+                            {td.estimatecount ? td.estimatecount : "-"}
+                          </li>
+                        ))}
+                    </ul>
                   </TableCell>
                   <TableCell className="border border-blue-500 px-0 p-0 m-0">
-                    {tableRow.taskdetails &&
-                      tableRow.taskdetails?.map((td) => (
-                        <ul className="py-1 px-3" key={td.timelogdetailid}>
-                          <li>{td.count ? td.count : "-"}</li>
-                        </ul>
-                      ))}
+                    <ul>
+                      {tableRow.taskdetails &&
+                        tableRow.taskdetails?.map((td) => (
+                          <li className="py-1 px-3" key={td.timelogdetailid}>
+                            {td.count ? td.count : "-"}
+                          </li>
+                        ))}
+                    </ul>
                   </TableCell>
                   <TableCell className="border border-blue-500">
-                    {tableRow.taskdetails &&
-                      tableRow.taskdetails?.map((td) => (
-                        <ul className="py-1 px-3" key={td.timelogdetailid}>
-                          <li>{td.remark ? td.remark : "-"}</li>
-                        </ul>
-                      ))}
+                    <ul>
+                      {tableRow.taskdetails &&
+                        tableRow.taskdetails?.map((td) => (
+                          <li className="py-1 px-3" key={td.timelogdetailid}>
+                            {td.remark ? td.remark : "-"}
+                          </li>
+                        ))}
+                    </ul>
                   </TableCell>
                 </TableRow>
               ))}

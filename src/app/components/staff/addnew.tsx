@@ -156,6 +156,7 @@ const StaffAddNew = (params: ParamTypes) => {
   ) => {
     e.preventDefault();
     const isValid = validateEmail(email);
+    console.log("isValid",email,)
     if (isValid) {
       setIsValidEmail(true);
       if (staffid) {

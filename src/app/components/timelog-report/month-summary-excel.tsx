@@ -18,7 +18,29 @@ export const TimelogSummaryExcel = ({
   const [tableDiv, setTableDiv] = useState<any>("");
   const year = useSelector((state: any) => state.yearMonthPickerReducer.year);
   const month = useSelector((state: any) => state.yearMonthPickerReducer.month);
-  const date = new Date(`${year}-${month}`);
+
+  const timezoneOffset = () => {
+    const userLocalTime = new Date();
+
+    // Get user's timezone offset in minutes
+    const timezoneOffsetMinutes = userLocalTime.getTimezoneOffset();
+
+    // Calculate GMT offset as a string
+    const gmtOffsetHours = Math.floor(Math.abs(timezoneOffsetMinutes) / 60);
+    const gmtOffsetMinutes = Math.abs(timezoneOffsetMinutes) % 60;
+    const gmtOffsetString =
+      (timezoneOffsetMinutes < 0 ? "+" : "-") +
+      (gmtOffsetHours < 10 ? "0" : "") +
+      gmtOffsetHours +
+      ":" +
+      (gmtOffsetMinutes < 10 ? "0" : "") +
+      gmtOffsetMinutes;
+
+    return gmtOffsetString;
+  };
+  const gmtOffsetString = timezoneOffset();
+  const date = new Date(`${year}-${month}-01T18:00:00${gmtOffsetString}`);
+  // const date = new Date(`${year}-${month}`);
 
   const border: any = {
     top: { style: "thin" },
@@ -47,7 +69,7 @@ export const TimelogSummaryExcel = ({
 
     // Find the table within the div
     const table = tableDiv.querySelector("table");
-
+    console.log("table", table);
     if (!table) {
       alert("Table not found within the div.");
       return;
@@ -188,17 +210,55 @@ export const TimelogSummaryExcel = ({
     };
 
     // Iterate through table rows
+    // table.querySelectorAll("tr").forEach((row) => {
+    //   const rowData = [];
+
+    //   // Iterate through row cells
+    //   row.querySelectorAll("td, th").forEach((cell) => {
+    //     const isUList = cell.querySelectorAll("ul");
+    //     if (isUList.length != 0) {
+    //       let ulContent = [];
+    //       isUList[0].querySelectorAll("li").forEach((li) => {
+    //         ulContent.push(li.textContent.trim());
+    //       });
+
+    //       // const multiLineText = ulContent.join('\n');
+    //       // rowData.push(ulContent);
+    //       // console.log(ulContent.join("\n"));
+    //       rowData.push(ulContent.join(","));
+    //     } else {
+    //       rowData.push(cell.textContent.trim());
+    //     }
+    //     // console.log("cell.textContent.trim()", cell);
+    //   });
+
+    //   worksheet.addRow(rowData);
+    // });
+
     table.querySelectorAll("tr").forEach((row) => {
       const rowData = [];
 
       // Iterate through row cells
       row.querySelectorAll("td, th").forEach((cell) => {
-        rowData.push(cell.textContent.trim());
+        const isUList = cell.querySelectorAll("ul");
+        if (isUList.length != 0) {
+          let ulContent = [];
+          isUList[0].querySelectorAll("li").forEach((li) => {
+            ulContent.push(li.textContent.trim());
+          });
+
+          // const multiLineText = ulContent.join('\n');
+          // rowData.push(ulContent);
+          // console.log(ulContent.join("\n"));
+          rowData.push(ulContent.join(","));
+        } else {
+          rowData.push(cell.textContent.trim());
+        }
+        // console.log("cell.textContent.trim()", cell);
       });
 
       worksheet.addRow(rowData);
     });
-
     const headerRow = worksheet.getRow(6);
 
     // Apply cell styling to the header row (bold text and borders)
@@ -220,7 +280,7 @@ export const TimelogSummaryExcel = ({
         cell.border = border;
       });
     });
-
+    // console.log("worksheet", worksheet);
     // Generate an Excel file
     workbook.xlsx.writeBuffer().then((buffer) => {
       const blob = new Blob([buffer], {

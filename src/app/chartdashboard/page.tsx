@@ -14,9 +14,6 @@ import { updateDBConnection } from "@/db";
 import LineChart from "../components/chart/line-chart";
 import ChartDashboard from "../components/chart/dashboard-chart";
 import { format, min } from "date-fns";
-import InitialDashboard from "../components/chart/initial-dashboard";
-import { Button } from "@nextui-org/react";
-import { MdGridView } from "react-icons/md";
 
 type TaskDashBoardObj = {
   taskid?: number;
@@ -136,9 +133,8 @@ export default function Dashboard() {
   };
 
   const navigateChartDashboard = async () => {
-    router.push("/chartdashboard");
+    router.push("/dashboard");
   };
-
   //tempary inactive session handle
 
   //end tempary inactive session handle
@@ -167,25 +163,11 @@ export default function Dashboard() {
       /> */}
       <div className="flex w-full flex-wrap sm:flex-nowrap gap-1">
         <div className="flex flex-col w-full sm:max-w-[80vw]">
-          <div className="flex m-4 w-full relative">
-            <h1 className="text-2xl text-blue-800 font-semibold">
-              Elevate productivity today.
-            </h1>
-            <Button
-              color="primary"
-              className="absolute right-10"
-              endContent={<MdGridView className="h-4 w-4" />}
-              onClick={navigateChartDashboard}
-            >
-              View Chart
-            </Button>
-          </div>
+          <h1 className="text-2xl m-4 text-blue-800 font-semibold">
+            Elevate productivity today.
+          </h1>
           <div className="flex gap-1">
-            <InitialDashboard
-              staffCount={staffCount}
-              projectCount={projectCount}
-            />
-            {/* <ChartDashboard /> */}
+            <ChartDashboard />
             {/* <div className="">
               <LineChart />
             </div>
